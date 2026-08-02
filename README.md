@@ -39,6 +39,19 @@ Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five ot
 1-3 reviews, which cannot be told apart from ordinary accrual: the two requests were captured 22-59
 minutes apart. Largest absolute rate impact is 0.225pp. See `outputs/offtopic_sensitivity.csv`.
 
+**A candidate signal, not a finding.** Rule matches for `procgen_hollow` concentrate in
+emergent-narrative games (3 of 4 at 7.0-18.8%; 14 of the other 15 games at or near zero). That is a
+concentration of *keyword matches*, and it is not yet evidence about what reviewers meant. Two reasons
+to withhold judgement: 8 of the 76 matches fire only on generic phrases with no reference to
+generation, and 21 of the 76 also carry `shallow_repetitive`, which itself appears in all four
+emergent games at 6.9-23.0%. Any claim that these are distinct objections has to survive hand-coding
+first.
+
+**"Uncoded" is coverage, not recall.** 20.2% of negative reviews match no rule, against 12% on the
+discovery sample the rules were built from. That gap measures where the rules are silent. It is not a
+recall estimate: a coded review can still contain an objection the rules missed, and an uncoded review
+may legitimately have no objection to code.
+
 ## Reproduce it
 
 ```bash
@@ -70,13 +83,16 @@ thinning a segment below three games each produce a non-zero exit.
 
 ## How I used AI
 
-I used an AI assistant for three things here: drafting and debugging the Python, learning parts of
-the Steam API I had not used before, and editing the prose in this README.
+This project is AI-assisted throughout, and the codebook in particular is **an AI-drafted candidate**,
+not an analyst-authored instrument. An AI assistant read the 100-review discovery sample, proposed the
+16 objection categories, wrote the regex rules that operationalise them, ran them across all 3,004
+negative reviews, and drafted the aggregate summary. It also wrote the pull, validation and freeze code.
 
-I did not use it to decide what to analyze or to interpret the results. The questions, the analytic
-choices, and every finding and recommendation above are mine. I can walk through any number on this
-page and explain why it is there.
+What stays with me: the question, the scope, the verification, and every interpretation that ships.
+The held-out 150 are hand-coded by me, blind to the machine predictions and to which game each review
+came from, precisely because the assistant cannot be both the instrument and the reference standard
+for its own accuracy.
 
-The sampling defects above are the useful example: the first version of the pull was AI-drafted,
-looked correct, ran without error, and was wrong in two ways at once. Reconciling the sample against
-the population denominators is what surfaced it.
+Per `ANALYST_OPERATING_SYSTEM.md` section 13, no precision or accuracy figure is reported here without
+saying who produced the reference labels. Until that hand-coding is done, the category rates below are
+**unvalidated rule output**: they show where a keyword rule fired, not what reviewers meant.

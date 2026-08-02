@@ -3,8 +3,9 @@
 Writes:
   outputs/coded_negatives.csv       one row per review, one column per category
   outputs/category_rates.csv        per-GAME rates (the correct grain, see below)
-  outputs/heldout_coding_sheet.csv  the 150 held-out reviews, blank labels, for
-                                    independent hand-coding
+The blinded held-out coding sheet is built separately by 08_coding_sheet.py.
+An earlier version built it here and truncated the text at 1,200 characters,
+which meant human and machine would have judged different text on 21 reviews.
 
 Grain discipline: rates are computed per GAME and then described across games.
 Reviews are clustered inside games and a sub-genre holds only 3-7 of them, so a
@@ -31,11 +32,8 @@ DATA, OUT = ROOT / "data", ROOT / "outputs"
 def main():
     excluded = {r["recommendationid"] for r in
                 csv.DictReader(open(OUT / "excluded_reviews.csv", encoding="utf-8"))}
-    heldout = {r["recommendationid"] for r in
-               csv.DictReader(open(OUT / "heldout_ids.csv", encoding="utf-8"))}
 
     coded, by_game = [], defaultdict(lambda: defaultdict(int))
-    heldout_rows = []
     for r in csv.DictReader(open(DATA / "reviews_raw.csv", encoding="utf-8")):
         if r["voted_up"] != "False" or r["recommendationid"] in excluded:
             continue
@@ -48,12 +46,6 @@ def main():
         by_game[(r["appid"], r["name"], r["axis"])]["_n"] += 1
         for c in codes:
             by_game[(r["appid"], r["name"], r["axis"])][c] += 1
-        if r["recommendationid"] in heldout:
-            heldout_rows.append({
-                "recommendationid": r["recommendationid"], "name": r["name"], "axis": r["axis"],
-                "review_text": " ".join((r["review"] or "").split())[:1200],
-                **{c: "" for c in cb.CATEGORIES if c != "uncoded"},
-            })
 
     with (OUT / "coded_negatives.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(coded[0].keys())); w.writeheader(); w.writerows(coded)
@@ -67,9 +59,6 @@ def main():
     with (OUT / "category_rates.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rates[0].keys())); w.writeheader(); w.writerows(rates)
 
-    heldout_rows.sort(key=lambda r: (r["axis"], r["name"]))
-    with (OUT / "heldout_coding_sheet.csv").open("w", newline="", encoding="utf-8") as f:
-        w = csv.DictWriter(f, fieldnames=list(heldout_rows[0].keys())); w.writeheader(); w.writerows(heldout_rows)
 
     print(f"coded {len(coded):,} negative reviews across {len(rates)} games")
     print(f"mean labels per review: {sum(r['n_labels'] for r in coded)/len(coded):.2f}")
@@ -81,8 +70,7 @@ def main():
         per_game = sorted(r[f"rate_{cat}"] for r in rates)
         print(f"   {cat:<24}{pooled:>8.3f}{per_game[0]:>14.3f}"
               f"{statistics.median(per_game):>9.3f}{per_game[-1]:>8.3f}")
-    print(f"\nwrote coded_negatives.csv, category_rates.csv, heldout_coding_sheet.csv "
-          f"({len(heldout_rows)} rows, labels blank)")
+    print("\nwrote coded_negatives.csv, category_rates.csv")
 
 
 if __name__ == "__main__":

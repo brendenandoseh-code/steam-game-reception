@@ -47,9 +47,28 @@ exposed to the second in a way it is not to the first.
    about price. Price itself is `monetization_dlc`. Both can apply.
 7. Ambiguity is resolved toward *not* coding. A category needs affirmative textual support.
 
+## Authorship
+
+**This is an AI-drafted candidate codebook.** An AI assistant read the discovery sample, proposed the
+categories, and wrote the rules. Brenden validates it by hand-coding the held-out 150 and owns every
+interpretation drawn from it. It is not described as analyst-authored anywhere.
+
 ## Validation plan
 
 Rules are applied mechanically to all eligible negative reviews. The held-out 150 are then hand-coded
-independently and compared, reporting **per-category precision, recall and F1**. A single pooled
-agreement rate is not reported: the categories are multi-label and unevenly frequent, so one number
-would be inflated by the common ones and would hide the categories that failed.
+by Brenden, blind to machine predictions and to game and sub-genre, on identical untruncated text.
+Reported per category: TP, FP, FN, human-positive support, machine-positive support, precision, recall
+and F1. A single pooled agreement rate is not reported, because the categories are multi-label and
+unevenly frequent, so one number would be inflated by the common ones and hide the ones that failed.
+
+**Sparse categories will be inconclusive and are labelled that way.** `procgen_hollow` has only 4
+machine-positives in the held-out 150, so precision for it rests on a handful of reviews no matter how
+carefully they are coded. Recall may be estimable if the human finds more; precision will not be.
+
+## Known weakness in v1, recorded before validation
+
+Of the 76 `procgen_hollow` matches across the full negative sample, 68 mention generation explicitly
+and **8 match only on generic phrases** (`copy paste`, `no impact`) that carry no claim about
+generation at all. The rule therefore over-matches, and the category as currently operationalised
+measures *rule firing*, not the semantic definition above. This is stated before validation rather
+than discovered by it.
