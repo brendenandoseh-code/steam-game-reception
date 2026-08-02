@@ -3,19 +3,31 @@
 **Status:** data collection complete and frozen (`outputs/freeze_manifest.json`). Codebook v1 drafted
 and applied. The blinded held-out sheet is built and awaiting hand-coding; no validated metrics exist yet.
 
-## Why I am doing this
+## Why this project exists
 
-I am building a simulation game where a generated world runs on its own and the lives inside it
-accumulate into history. That raises a design question I could not answer from intuition: when players
-dislike a game in this category, what are they actually objecting to, and does procedurally generated
-content draw a *distinct* complaint or just the same complaints as everything else?
+I am building a game where a generated world runs for centuries on its own and the ordinary lives
+inside it accumulate into history. The bet underneath it is that a simulation can produce a life worth
+reading about without an author writing that life in advance. If the bet is wrong, none of the rest of
+the design matters.
 
-That question is answerable from public data. Steam reviews are the largest body of unprompted consumer
-reaction to these games that exists, and the negative ones say plainly what went wrong.
+The failure I actually worry about is not that the simulation breaks. It is that it works exactly as
+specified and produces a sequence of events rather than a story: things happen, they are recorded
+correctly, and nobody cares. My own build is the worst possible place to test that, because I already
+know what every event was supposed to mean. I cannot read my own output cold.
 
-So this is a positioning analysis of an established category, done to understand the risks facing a new
-entrant. I have a personal stake in the answer, which is exactly why the guards below matter: it would
-be easy to find the result I want.
+What I can do is look at players who have already run into this in shipped games. Several titles in
+this category sell generated narrative as the point, and the players who bounced off them wrote down
+why, unprompted, at length, in public. That is a large body of reaction to the exact risk I am
+carrying, produced by people with no stake in my project.
+
+The question is whether generated content draws a **distinct** objection at all, or whether players
+complain about the same things they complain about everywhere: bugs, grind, price, opacity, an
+interface that fights them. The two answers point at different work. If the objection is distinct and
+common, generation quality has to clear a bar before anything else gets built on top of it. If it is
+rare, or if it turns out to be indistinguishable from ordinary complaints that a game is thin, then the
+real risk sits somewhere else and I have been guarding the wrong thing.
+
+I would prefer one of those answers, which is why the guards in the next section exist.
 
 ## The question
 
