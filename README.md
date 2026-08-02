@@ -79,8 +79,8 @@ came from. Software has necessarily processed their text; what has not happened 
 or labelling of them, precisely because the assistant cannot be both the instrument and the reference standard
 for its own accuracy.
 
-Per `ANALYST_OPERATING_SYSTEM.md` section 13, no precision or accuracy figure is reported here without
-saying who produced the reference labels. Until that hand-coding is done, the category rates below are
+No precision or accuracy figure is reported anywhere in this repository without saying who produced the
+reference labels. Until the hand-coding is done, the per-game rates in `outputs/category_rates.csv` are
 **unvalidated rule output**: they show where a keyword rule fired, not what reviewers meant.
 
 ## Reproduce it

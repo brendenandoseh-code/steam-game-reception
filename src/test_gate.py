@@ -99,6 +99,22 @@ def main():
                 failures.append((f"sheet invariant: {name}", None, None, False))
             print(f"  {'PASS' if ok else 'FAIL'}  {'sheet: ' + name:<28}")
 
+        # Verification must FAIL CLOSED when a required manifest is absent.
+        VERIFY = [sys.executable, str(ROOT / "src" / "verify.py")]
+        assert run(VERIFY).returncode == 0, "verifier must pass before this test"
+        for mname in ["freeze_manifest.json", "split_manifest.json", "codebook_manifest.json"]:
+            mp = ROOT / "outputs" / mname
+            stash = mp.read_bytes()
+            mp.unlink()
+            try:
+                ok = run(VERIFY).returncode != 0
+            finally:
+                mp.write_bytes(stash)
+            if not ok:
+                failures.append((f"verifier fails open without {mname}", None, None, False))
+            print(f"  {'PASS' if ok else 'FAIL'}  {'missing ' + mname:<28} verification_fails={ok}")
+        assert run(VERIFY).returncode == 0, "manifests must be restored"
+
         # A Day 2 artifact must not invalidate the Day 1 manifest.
         day2 = ROOT / "outputs" / "_test_day2_artifact.csv"
         day2.write_text("id\n1\n", encoding="utf-8")
@@ -117,7 +133,7 @@ def main():
     if failures:
         print(f"{len(failures)} TEST FAILURE(S): {[f[0] for f in failures]}")
         return 1
-    print(f"all {len(MUTATIONS) + 6} tests passed; raw file restored")
+    print(f"all {len(MUTATIONS) + 9} tests passed; raw file restored")
     return 0
 
 

@@ -50,13 +50,13 @@ exposed to the second in a way it is not to the first.
 ## Authorship
 
 **This is an AI-drafted candidate codebook.** An AI assistant read the discovery sample, proposed the
-categories, and wrote the rules. Brenden validates it by hand-coding the held-out 150 and owns every
+categories, and wrote the rules. I validate it by hand-coding the held-out 150 and I own every
 interpretation drawn from it. It is not described as analyst-authored anywhere.
 
 ## Validation plan
 
 Rules are applied mechanically to all eligible negative reviews. The held-out 150 are then hand-coded
-by Brenden, blind to machine predictions and to game and sub-genre, on identical untruncated text.
+by me, blind to machine predictions and to game and sub-genre, on identical untruncated text.
 Reported per category: TP, FP, FN, human-positive support, machine-positive support, precision, recall
 and F1. A single pooled agreement rate is not reported, because the categories are multi-label and
 unevenly frequent, so one number would be inflated by the common ones and hide the ones that failed.

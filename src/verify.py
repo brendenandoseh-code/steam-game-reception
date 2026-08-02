@@ -37,7 +37,11 @@ def main():
     for mname in MANIFESTS:
         mp = OUT / mname
         if not mp.exists():
-            print(f"{mname}: not present, skipped")
+            # Fail closed. A missing manifest previously printed "skipped" and
+            # the run could still report VERIFY OK, which is the same
+            # fail-open shape as a manifest nothing asks.
+            problems.append(f"{mname}: MISSING MANIFEST")
+            print(f"{mname}: MISSING - a required manifest is absent")
             continue
         m = json.loads(mp.read_text(encoding="utf-8"))
         print(f"{mname}  ({m.get('phase', 'day1_freeze')})")

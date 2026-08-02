@@ -75,7 +75,7 @@ def main():
         "codebook_frozen_at": "commit 5af32b6, drafted from the 100 discovery reviews only",
         "codebook_authorship": "AI-drafted candidate codebook. Categories and regex rules were "
                                "produced by an AI assistant reading the discovery sample. They are "
-                               "validated and interpreted by Brenden, not by the assistant.",
+                               "validated and interpreted by the analyst, not by the assistant.",
         "sheet_seed_presentation_order": ORDER_SEED,
         "blinded": "game name, sub-genre and appid are withheld; machine predictions are not included",
         "text": "full review text, no truncation",

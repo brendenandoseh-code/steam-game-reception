@@ -1,7 +1,7 @@
 {
   "phase": "day2_codebook",
   "codebook_frozen_at": "commit 5af32b6, drafted from the 100 discovery reviews only",
-  "codebook_authorship": "AI-drafted candidate codebook. Categories and regex rules were produced by an AI assistant reading the discovery sample. They are validated and interpreted by Brenden, not by the assistant.",
+  "codebook_authorship": "AI-drafted candidate codebook. Categories and regex rules were produced by an AI assistant reading the discovery sample. They are validated and interpreted by the analyst, not by the assistant.",
   "sheet_seed_presentation_order": 8021,
   "blinded": "game name, sub-genre and appid are withheld; machine predictions are not included",
   "text": "full review text, no truncation",
@@ -39,8 +39,8 @@
       "bytes": 3121
     },
     "CODEBOOK.md": {
-      "sha256": "91bc467ee4adc8f4d19c5e3cb2a5fdc919dc0d7173595dcdf023b9fb7886e081",
-      "bytes": 6001
+      "sha256": "7807ce2b5f90784e9fb0e578f4b3744aba95b0ba6fb6e3555ae71a417d0a8b2c",
+      "bytes": 5990
     },
     "src/06_codebook.py": {
       "sha256": "f7a069e5ca6bb37bd1a597d4adfbe91fb6ae8e96c503f2ce3c2e48c73e7a0afa",
@@ -51,8 +51,8 @@
       "bytes": 3545
     },
     "src/08_coding_sheet.py": {
-      "sha256": "6a2214e5f5f242c9d30c6dc843e83a7d535d20dabf9398787f6207e1872295c6",
-      "bytes": 4986
+      "sha256": "0c4dce78008ebc8d64388851afa861bd9af14262a5e98afc92eb03755160cba6",
+      "bytes": 4990
     }
   }
 }

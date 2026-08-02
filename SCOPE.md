@@ -1,143 +1,137 @@
-# Scope — Steam game reception study
+# Scope
 
-**Status:** Day 1 complete 2026-08-02, dataset frozen (`outputs/freeze_manifest.json`). Day 2 not started.
-**Purpose:** close three documented gaps in the portfolio before an NRG interview. Does not block the application, which goes in first.
+**Status:** data collection complete and frozen (`outputs/freeze_manifest.json`). Codebook v1 drafted
+and applied. The blinded held-out sheet is built and awaiting hand-coding; no validated metrics exist yet.
 
-## Why this project exists
+## Why I am doing this
 
-The NRG application has three honest gaps that a single project can close:
+I am building a simulation game where a generated world runs on its own and the lives inside it
+accumulate into history. That raises a design question I could not answer from intuition: when players
+dislike a game in this category, what are they actually objecting to, and does procedurally generated
+content draw a *distinct* complaint or just the same complaints as everything else?
 
-| Gap | Why it matters here | How this closes it |
-|---|---|---|
-| **No entertainment-domain work.** All five existing projects are healthcare or public health. | The role sits in Entertainment, Gaming, Sports & Tech. A reviewer has to take on faith that the skills transfer. | Gaming data, gaming question. |
-| **No deck.** Portfolio is Tableau dashboards and READMEs. | The actual deliverable of this job is a client presentation. The posting names PowerPoint and Google Slides and puts "highly visual, creative and story-driven presentations" in two separate bullets. | The primary artifact is a PowerPoint deck, not a dashboard. |
-| **No unstructured data.** All five projects use structured CSV, claims, or survey data. | "You're comfortable working with structured and unstructured data" is a stated requirement, and `APPLICATION_BRIEF.md` records this as a claim he currently cannot make. | Review free text is the core input. |
+That question is answerable from public data. Steam reviews are the largest body of unprompted consumer
+reaction to these games that exists, and the negative ones say plainly what went wrong.
 
-## Revision 2026-08-02, after a competing scope proposal
-
-A second proposal was reviewed and two of its points are adopted.
-
-**Adopted: name a method from the posting.** The original scope invented its own format. The posting lists the methods this team runs by name — "concept evaluation, brand studies, content optimization tests, messaging/positioning evaluation, creative materials tests, market sizing and segmentation." The project should be one of those, in their vocabulary, so a reviewer does not have to translate. This is now framed as a **messaging/positioning evaluation with segmentation**.
-
-**Adopted: QOS as category anchor.** The comparison set is the sim/colony/life-sim category QOS would enter (Dwarf Fortress, RimWorld, Crusader Kings III, Caves of Qud, Kenshi, The Sims). QOS supplies the business question and stays out of the findings, which keeps this a work sample rather than a pitch deck.
-
-**Rejected: the primary survey phase.** The proposal suggested a monadic concept test recruited via Prolific (~$400-600) or free from gaming subreddits and Discord "if you state the bias explicitly." Rejected on both options:
-
-- A convenience sample drawn from sim-game communities **selects on the outcome variable**. Appeal and purchase intent measured among people already filtered for appetite for this genre is not a biased estimate, it is an uninterpretable one, and disclosure does not repair it. Recruiting where Brenden is known adds a demand characteristic.
-- $400-600 is poor return on a single application.
-- k-means for 4-5 segments at n=200 is thin, and segment stability would have to be defended to people who do this professionally.
-
-Primary research is deferred until an interview is scheduled and a defensible sampling frame exists. **Everything below runs on secondary data and needs no recruitment, no budget, and no respondents.**
-
-**Sequencing note.** The single highest-value artifact is not this project. It is a short writeup of the AI-validation method already documented in `QOS/design/research/METHOD_AND_RUBRIC.md` (evidence bar, unverified-context ledger, reproducible search logs preserving rejected sources and failed searches, triangulation across two independently-checked source families, mandatory adversarial source, WEIRD-bias audit). That maps directly onto the posting's AI Fluency requirement, requires almost no new work, and almost no entry-level applicant can produce anything comparable. Do that first.
+So this is a positioning analysis of an established category, done to understand the risks facing a new
+entrant. I have a personal stake in the answer, which is exactly why the guards below matter: it would
+be easy to find the result I want.
 
 ## The question
 
-> A review score tells a publisher **that** players are unhappy, not **why**. Across the established simulation category, what do players in negative reviews actually object to, how do those objections differ by sub-genre, and what does that imply about the positioning risks facing a new entrant?
+> A review score tells you *that* players are unhappy, not *why*. Across the established simulation
+> category, what do players in negative reviews actually object to, how do those objections differ by
+> sub-genre, and what does that imply about the positioning risks facing a new entrant?
 
-Framed in the posting's own terms: a **messaging/positioning evaluation** built on the voice of the consumer already present in public review text.
+Objections only. An earlier version promised both praise and objections while the codebook only ever
+coded negative reviews. Objections alone is the honest scope and the more useful half for a positioning
+question.
 
-**Narrowed 2026-08-02.** An earlier version promised both praise and objections while the codebook only ever coded negative reviews. Objections alone is the honest three-day scope and is the more useful half for a positioning question.
+## Guards against finding what I want
 
-## Data (both endpoints verified working 2026-08-02, no API key required)
+I want `procgen_hollow` to be a real and distinct objection, because it bears on a game I am building.
+That is a motivated-reasoning risk, handled structurally rather than by good intentions:
 
-**Reviews** — `https://store.steampowered.com/appreviews/{appid}?json=1`
-Confirmed fields: `review` (free text), `voted_up` (recommend / not), `author.playtime_at_review` and `author.playtime_forever` (minutes), `timestamp_created`, `written_during_early_access`, `received_for_free`, `steam_purchase`, `refunded`, `votes_up`, `weighted_vote_score`.
-`query_summary` returns `total_reviews`, `total_positive`, `total_negative` per game, which are the correct denominators.
+- Discovery and held-out samples were drawn, hashed and committed **before any review text was read**,
+  so the codebook cannot be tuned to its own test set.
+- The codebook is **frozen** once applied. A category that performs badly is reported as a v1 result,
+  not quietly patched.
+- The held-out coding sheet is **blinded**: no game name, no sub-genre, no machine predictions, fixed
+  random order. If I could see which reviews came from emergent-narrative games I would code toward the
+  answer I expect.
+- Known weaknesses are recorded **before** validation. Eight of the 76 `procgen_hollow` matches fire on
+  generic phrasing with no reference to generation at all, and the category has only four
+  machine-positives in the held-out set, so its precision will be inconclusive whatever the coding
+  shows. Both are written into `CODEBOOK.md`, before any labelling.
 
-**Game metadata** — `https://store.steampowered.com/api/appdetails?appids={appid}&cc=us`
-Confirmed fields: `name`, `genres`, `release_date`, `price_overview` (current and initial, in cents), `metacritic.score`, `categories`.
+## Data
 
-Public, documented, no authentication, no scraping, no terms-of-service problem. Raw pulls are gitignored; only derived aggregates are committed.
+Two public Steam endpoints, no API key, no scraping. Verified working 2026-08-02.
+
+**Reviews** — `store.steampowered.com/appreviews/{appid}` — free text, recommend flag, playtime at
+review, timestamp, early-access flag, purchase context, helpfulness votes. `query_summary` returns
+lifetime totals per game, which are the correct denominators.
+
+**Metadata** — `store.steampowered.com/api/appdetails` — name, genres, release date, price, Metacritic.
+
+Raw pulls are gitignored; only derived aggregates are committed.
 
 ## Scope guards
 
-Fixed up front so the project finishes in days rather than becoming open-ended.
-
 **In:**
-- **The simulation category comparison set: 19 titles, resolved and name-verified** (`outputs/comparison_set.csv`). Colony/management 7, grand-strategy/dynasty 3, emergent-narrative 4, life sim 5. Chosen to span the positioning axes a new entrant must pick between. **Purposive, not random**, so it characterises this set and does not estimate a category population.
-- English-language reviews only
-- Up to 1,200 reviews per game via `filter=recent`. 17 of 19 games returned exactly 1,200 unique reviews; two returned 1,198 after de-duplication. 22,796 total.
-- One outcome variable: `voted_up`
-- Segmentation: **sub-genre** (the positioning axis) and **playtime band**. Price tier is dropped: the API's `final` price reflects whatever sale is running at pull time, so it is not a stable attribute.
+- **19 titles, resolved and name-verified** (`outputs/comparison_set.csv`): colony/management 7,
+  grand-strategy/dynasty 3, emergent-narrative 4, life sim 5. Chosen to span the positioning axes a new
+  entrant must pick between. **Purposive, not random**, so it characterises this set and does not
+  estimate a category population.
+- English-language reviews only.
+- Up to 1,200 reviews per game via `filter=recent`. 17 of 19 returned exactly 1,200 unique reviews; two
+  returned 1,198 after de-duplication. 22,796 total.
+- One outcome variable: `voted_up`.
+- Segmentation: **sub-genre** (the positioning axis) and **playtime band**. Price tier is dropped: the
+  API's `final` price reflects whatever sale is running at pull time, so it is not a stable attribute.
 
 **Out, deliberately:**
-- Non-English reviews. Cannot validate the coding, so excluded and stated as a limitation.
-- Off-the-shelf sentiment scoring. Unvalidated on this text type; the codebook below is defensible and the sentiment library is not.
-- Topic modeling (LDA and similar). Eats days and produces categories that cannot be hand-checked.
-- Predictive modeling. Adds nothing to the question.
+- Non-English reviews. I cannot validate coding in languages I do not read.
+- Off-the-shelf sentiment scoring. Unvalidated on this text type; the codebook is defensible and the
+  sentiment library is not.
+- Topic modelling. Eats days and produces categories that cannot be hand-checked.
+- Predictive modelling. Adds nothing to the question.
+- **Primary survey research.** A concept test recruited from sim-game communities would select on the
+  outcome variable: appeal measured among people already filtered for appetite for this genre is not a
+  biased estimate, it is an uninterpretable one, and disclosure does not repair it. Everything here runs
+  on secondary data and needs no recruitment and no respondents.
 - Any paid data source.
 
 ## Method
 
-**1. Sampling.** Measured, not assumed. Steam offers no random ordering. `filter=recent` is strict recency and pages reliably; `filter=all` is helpfulness-weighted and its pagination stalls near 200 reviews. An earlier draft of this scope had these backwards. The sample uses `filter=recent`.
+**1. Sampling.** Measured, not assumed. Steam offers no random ordering. `filter=recent` is strict
+recency and pages reliably; `filter=all` is helpfulness-weighted and its pagination stalls near 200
+reviews. An earlier draft of this scope had these backwards. The sample uses `filter=recent`.
 
-Three consequences to state on the slide, not bury:
+Three consequences, stated plainly rather than buried:
 
-- **It is an equal-N latest-review sample, not a time window.** Coverage runs from 13 days (Stardew Valley) to 963 days (My Time at Portia), median 192. Never describe it as "current sentiment" across the category.
-- **Helpfulness ordering differs from recency ordering** by a median of 1.1 points and a mean of 3.8 across 16 games, more negative in 10 of 16. Report both statistics; the mean is outlier-driven. This is a description of two orderings, not a demonstrated causal effect of sorting.
-- **Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is computed per game into `outputs/offtopic_sensitivity.csv`, not asserted. **Four** games show unambiguous withholding (Factorio +3,355, Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five more differ by only 1-3 reviews, which cannot be separated from ordinary review accrual because the default and included requests were captured 22-59 minutes apart; those are not counted as affected. Largest absolute rate impact across the set is 0.225pp.
+- **It is an equal-N latest-review sample, not a time window.** Coverage runs from 13 days (Stardew
+  Valley) to 963 days (My Time at Portia), median 192. Never describe it as "current sentiment".
+- **Helpfulness ordering differs from recency ordering** by a median of 1.1 points and a mean of 3.8
+  across 16 games, more negative in 10 of 16. Report both; the mean is outlier-driven. This describes
+  two orderings; it does not demonstrate a causal effect of sorting.
+- **Steam withholds off-topic review-bomb periods by default.** Retained, sensitivity computed per game
+  into `outputs/offtopic_sensitivity.csv`. Four games show unambiguous withholding (Factorio +3,355,
+  Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five more differ by 1-3
+  reviews, which cannot be separated from ordinary accrual because the two requests were captured 22-59
+  minutes apart; those are not counted as affected. Largest absolute rate impact is 0.225pp.
 
-**2. Codebook, hand-validated.** Not a black box:
+**2. Codebook.** Not a black box. Categories drafted from a 100-review discovery sample, turned into
+explicit rules, applied mechanically, then validated against a fresh hand-coded 150. Definitions,
+coding rules, authorship and known weaknesses are in `CODEBOOK.md`.
 
-1. Read a random 100 negative reviews and draft objection categories (performance and bugs, price and value, difficulty and balance, content volume, monetization, story and writing, controls and UI, etc.)
-2. Turn each category into explicit keyword and phrase rules
-3. Apply the rules across the full sample
+**3. Comparison, not pooled inference.** Reviews are clustered inside games, and a sub-genre holds only
+3 to 7 games. The effective N for any sub-genre claim is the game count, not the review count. Pooled
+two-proportion tests over reviews would treat thousands of clustered reviews as independent
+observations and are **not run**. Report per-game rates and the distribution across games; a sub-genre
+difference has to be visible as separation between games, not between pooled percentages.
 
-Step 4 is the point. Per-category precision and recall are what separate defensible coding from asserted categories.
-
-**Freeze before reading.** The discovery sample IDs, the held-out sample IDs, the random seed, and the stratification are written to `outputs/` *before* any review text is read, so the codebook cannot be tuned to the held-out set.
-
-**3. Comparison, not pooled inference.** Reviews are clustered inside games, and a sub-genre holds only 3 to 7 games. The effective N for any sub-genre claim is therefore the game count, not the review count. Pooled two-proportion tests over reviews would treat 4,798 clustered reviews as 4,798 independent observations and are **not run**. Report per-game objection rates and the distribution across games; if a sub-genre difference is claimed, it has to be visible as a separation between games, not between pooled percentages.
-
-**4. Unit of analysis.** The classic error here is mixing grains. The **review** is the unit for objection coding. The **game** is the unit for reception rates. Never average review-level rates across games without weighting, and say which grain each chart uses.
+**4. Unit of analysis.** The **review** is the unit for objection coding. The **game** is the unit for
+rates. Never average review-level rates across games without weighting, and say which grain each chart
+uses.
 
 ## Deliverable
 
-A 10 to 12 slide PowerPoint deck, which is the artifact this project exists to produce.
+A short deck answering the question, with scope and caveats up front rather than buried, one idea per
+slide, and a method appendix carrying the per-category validation metrics.
 
-1. Title
-2. The question and why a publisher would care
-3. What was analyzed, with scope and caveats stated **up front**, not buried
-4. Headline finding
-5-7. Supporting findings, one idea per slide
-8. Where segments genuinely differ
-9. Where they do not, stated plainly
-10. So what: what a publisher should do differently
-11. Limitations
-
-Charts generated in Python for reproducibility; deck assembled in PowerPoint so it actually looks like a client deliverable. A programmatically generated deck reads as generic, and visual craft is being assessed here.
-
-Repository also carries a README matching the existing five, and a `## How I used AI` section consistent with `ANALYST_OPERATING_SYSTEM.md` §13.
+Charts generated in Python for reproducibility; the deck assembled by hand so it reads as a deliverable
+rather than a report dump.
 
 ## Acceptance checks
 
-Per `ANALYST_OPERATING_SYSTEM.md`, before any interpretation:
+Before any interpretation:
 
-- [ ] Schema and types validated on both endpoints
-- [ ] Duplicate `recommendationid` values removed
-- [ ] Missingness quantified for playtime and review text (price is excluded from the analysis)
-- [ ] Sampled positive rate reconciled against `query_summary` totals per game
-- [ ] Unit of analysis labeled on every chart
-- [ ] Games per sub-genre reported as the effective N; no pooled review-level test is run
-- [ ] Per-category precision, recall and F1 computed on the held-out sample and stated in the deck
-- [ ] Every number in the deck traceable to a script, no hand-typed figures
-
-## Timeline
-
-Three working days.
-
-- **Day 1** — pull, validate, reconcile against `query_summary`, freeze the dataset
-- **Day 2** — draft codebook, apply, hand-validate on the held-out sample, run tests
-- **Day 3** — charts, deck, README, repository
-
-## Risks
-
-- **Rate limiting.** Steam throttles. Mitigation: cache every response to disk, back off, and never re-pull.
-- **Codebook drift.** Categories invented after seeing results are not findings. Mitigation: freeze the codebook before applying it to the full sample.
-- **Scope creep into modeling.** Mitigation: the "Out" list above is binding.
-- **Finding nothing surprising.** Acceptable. A clean null with honest confidence intervals is a legitimate result and is more credible than a manufactured headline.
-
-## Open decision
-
-Gaming (Steam) is the recommendation: NRG names it as a sector, the data is richest, and Brenden has genuine domain fluency. Film and TV via MovieLens is the alternative, but it has ratings and tags rather than review text, which would forfeit the unstructured-data gap this project is partly meant to close.
+- [x] Schema and types validated on both endpoints
+- [x] Duplicate `recommendationid` values removed
+- [x] Missingness quantified; timestamp and playtime are zero-tolerance
+- [x] Sampled positive rate reconciled against lifetime totals per game
+- [x] Games per sub-genre reported as the effective N; no pooled review-level test is run
+- [x] Every output hashed into a phase manifest, and verification fails closed when one is missing
+- [ ] Per-category precision, recall and F1 computed on the held-out sample
+- [ ] Every number in the deck traceable to a script; no hand-typed figures
