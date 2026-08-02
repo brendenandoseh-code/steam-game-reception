@@ -14,11 +14,22 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from steam import ROOT  # noqa: E402
 
 DATA, OUT = ROOT / "data", ROOT / "outputs"
-MANIFESTS = ["freeze_manifest.json", "split_manifest.json"]
+MANIFESTS = ["freeze_manifest.json", "split_manifest.json", "codebook_manifest.json"]
 
 
 def sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def resolve(name: str) -> Path:
+    """Manifests reference three kinds of path: the raw file in data/, plain
+    output names in outputs/, and project-relative paths like CODEBOOK.md or
+    src/06_codebook.py. Resolve all three."""
+    if name == "reviews_raw.csv":
+        return DATA / name
+    if "/" in name or (ROOT / name).exists() and not (OUT / name).exists():
+        return ROOT / name
+    return OUT / name
 
 
 def main():
@@ -31,7 +42,7 @@ def main():
         m = json.loads(mp.read_text(encoding="utf-8"))
         print(f"{mname}  ({m.get('phase', 'day1_freeze')})")
         for name, meta in m["files"].items():
-            p = (DATA if name == "reviews_raw.csv" else OUT) / name
+            p = resolve(name)
             if not p.exists():
                 problems.append(f"{mname}: MISSING {name}")
                 print(f"   MISSING  {name}")
@@ -41,14 +52,19 @@ def main():
                 problems.append(f"{mname}: CHANGED {name}")
             print(f"   {'match  ' if ok else 'CHANGED'}  {name}")
 
-        # the split must still describe the same raw data it was drawn from
-        dep = m.get("depends_on_day1_manifest")
-        if dep:
-            actual = sha(DATA / "reviews_raw.csv")
-            ok = dep == actual
+        # lineage: each phase pins the artifacts it was derived from
+        for label, key, target in [
+            ("raw data this split was drawn from", "depends_on_day1_manifest", DATA / "reviews_raw.csv"),
+            ("raw data this codebook was applied to", "depends_on_raw_sha", DATA / "reviews_raw.csv"),
+            ("held-out IDs this sheet was built from", "depends_on_heldout_ids_sha", OUT / "heldout_ids.csv"),
+        ]:
+            dep = m.get(key)
+            if not dep:
+                continue
+            ok = dep == sha(target)
             if not ok:
-                problems.append(f"{mname}: drawn from a different reviews_raw.csv")
-            print(f"   {'match  ' if ok else 'CHANGED'}  <- raw data this split was drawn from")
+                problems.append(f"{mname}: lineage broken - {label}")
+            print(f"   {'match  ' if ok else 'CHANGED'}  <- {label}")
 
     print()
     if problems:

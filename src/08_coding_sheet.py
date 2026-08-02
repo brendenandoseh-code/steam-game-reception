@@ -80,13 +80,15 @@ def main():
         "blinded": "game name, sub-genre and appid are withheld; machine predictions are not included",
         "text": "full review text, no truncation",
         "human_labels_offered": HUMAN_LABELS,
+        "depends_on_raw_sha": hashlib.sha256((DATA / "reviews_raw.csv").read_bytes()).hexdigest(),
+        "depends_on_heldout_ids_sha": hashlib.sha256((OUT / "heldout_ids.csv").read_bytes()).hexdigest(),
         "files": {},
     }
     for n in ["heldout_coding_sheet.csv", "coded_negatives.csv", "category_rates.csv"]:
         p = OUT / n
         manifest["files"][n] = {"sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
                                 "bytes": p.stat().st_size}
-    for n in ["CODEBOOK.md", "src/06_codebook.py", "src/07_apply.py"]:
+    for n in ["CODEBOOK.md", "src/06_codebook.py", "src/07_apply.py", "src/08_coding_sheet.py"]:
         p = ROOT / n
         manifest["files"][n] = {"sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
                                 "bytes": p.stat().st_size}

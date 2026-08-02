@@ -1,6 +1,7 @@
 # Steam game reception — what players in negative reviews actually object to
 
-**Status:** Day 1 complete. Data pulled, validated, and frozen. Coding and deck not started.
+**Status:** Day 1 complete and frozen. Codebook v1 drafted and applied. The blinded held-out sheet is
+built and awaiting analyst hand-coding; no validated metrics exist yet, and the deck is not started.
 
 A messaging and positioning study built on public Steam review text. A review score tells a
 publisher *that* players are unhappy; it does not say *why*. This takes the negative reviews
@@ -52,22 +53,6 @@ discovery sample the rules were built from. That gap measures where the rules ar
 recall estimate: a coded review can still contain an objection the rules missed, and an uncoded review
 may legitimately have no objection to code.
 
-## Reproduce it
-
-```bash
-py src/01_resolve_comparison_set.py   # verify appids against the store API by name
-py src/02_pull_reviews.py             # pull reviews + population denominators
-py src/03_validate.py                 # acceptance gate; exits non-zero on failure
-py src/04_freeze.py create            # write the hash manifest
-py src/04_freeze.py verify            # check current files against it
-```
-
-Every API response is cached to `data/cache/`, so a re-run makes no network calls and must
-reproduce identical hashes. Raw pulls are gitignored; only derived aggregates are committed.
-
-The gate is tested to fail, not just to pass: injecting a duplicate ID, blanking timestamps, or
-thinning a segment below three games each produce a non-zero exit.
-
 ## Honest notes (data caveats)
 
 - **English only.** Coding cannot be validated in languages I do not read.
@@ -89,10 +74,32 @@ not an analyst-authored instrument. An AI assistant read the 100-review discover
 negative reviews, and drafted the aggregate summary. It also wrote the pull, validation and freeze code.
 
 What stays with me: the question, the scope, the verification, and every interpretation that ships.
-The held-out 150 are hand-coded by me, blind to the machine predictions and to which game each review
-came from, precisely because the assistant cannot be both the instrument and the reference standard
+The held-out 150 are labelled by me, blind to the machine predictions and to which game each review
+came from. Software has necessarily processed their text; what has not happened is any analyst reading
+or labelling of them, precisely because the assistant cannot be both the instrument and the reference standard
 for its own accuracy.
 
 Per `ANALYST_OPERATING_SYSTEM.md` section 13, no precision or accuracy figure is reported here without
 saying who produced the reference labels. Until that hand-coding is done, the category rates below are
 **unvalidated rule output**: they show where a keyword rule fired, not what reviewers meant.
+
+## Reproduce it
+
+```bash
+py src/01_resolve_comparison_set.py   # verify appids against the store API by name
+py src/02_pull_reviews.py             # pull reviews + population denominators
+py src/03_validate.py                 # acceptance gate; exits non-zero on failure
+py src/04_freeze.py create            # write the day-1 hash manifest
+py src/05_split.py                    # discovery/held-out IDs, before reading text
+py src/06_codebook.py                 # frozen rules (imported, not run directly)
+py src/07_apply.py                    # apply rules to all negatives
+py src/08_coding_sheet.py             # blinded held-out sheet
+py src/verify.py                      # check ALL THREE phase manifests
+py src/test_gate.py                   # gate invariants
+```
+
+Every API response is cached to `data/cache/`, so a re-run makes no network calls and must
+reproduce identical hashes. Raw pulls are gitignored; only derived aggregates are committed.
+
+The gate is tested to fail, not just to pass: injecting a duplicate ID, blanking timestamps, or
+thinning a segment below three games each produce a non-zero exit.

@@ -72,6 +72,33 @@ def main():
             print(f"  {'PASS' if ok else 'FAIL'}  {label:<28} "
                   f"fails={failed} clean={clean} outputs_intact={intact}")
 
+        # Coding-sheet invariants: a future regeneration must not silently
+        # undo the blinding, the full text, or the fixed order.
+        import csv as _csv
+        sheet = list(_csv.DictReader(open(ROOT / "outputs" / "heldout_coding_sheet.csv", encoding="utf-8")))
+        raw = {r["recommendationid"]: r for r in
+               _csv.DictReader(open(ROOT / "data" / "reviews_raw.csv", encoding="utf-8"))}
+        held = [r["recommendationid"] for r in
+                _csv.DictReader(open(ROOT / "outputs" / "heldout_ids.csv", encoding="utf-8"))]
+        label_cols = [c for c in sheet[0] if c not in ("row", "recommendationid", "review_text")]
+        checks = {
+            "150 rows, ids match the frozen split":
+                len(sheet) == 150 and {r["recommendationid"] for r in sheet} == set(held),
+            "no metadata leakage":
+                not ({"name", "axis", "appid"} & set(sheet[0])),
+            "all label columns blank":
+                all(r[c] == "" for r in sheet for c in label_cols),
+            "text is full, untruncated":
+                all(r["review_text"] == " ".join((raw[r["recommendationid"]]["review"] or "").split())
+                    for r in sheet),
+            "order is not by game":
+                len({raw[r["recommendationid"]]["name"] for r in sheet[:12]}) > 4,
+        }
+        for name, ok in checks.items():
+            if not ok:
+                failures.append((f"sheet invariant: {name}", None, None, False))
+            print(f"  {'PASS' if ok else 'FAIL'}  {'sheet: ' + name:<28}")
+
         # A Day 2 artifact must not invalidate the Day 1 manifest.
         day2 = ROOT / "outputs" / "_test_day2_artifact.csv"
         day2.write_text("id\n1\n", encoding="utf-8")
@@ -90,7 +117,7 @@ def main():
     if failures:
         print(f"{len(failures)} TEST FAILURE(S): {[f[0] for f in failures]}")
         return 1
-    print(f"all {len(MUTATIONS) + 1} gate tests passed; raw file restored")
+    print(f"all {len(MUTATIONS) + 6} tests passed; raw file restored")
     return 0
 
 

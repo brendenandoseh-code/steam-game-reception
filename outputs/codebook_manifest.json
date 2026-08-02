@@ -23,6 +23,8 @@
     "update_regression",
     "non_substantive"
   ],
+  "depends_on_raw_sha": "04353c1ac4cfa786b60e2edf735e4207e6a28f83c436a01ecb5f07f5c8f3c83d",
+  "depends_on_heldout_ids_sha": "ad180bf1e519758b9eb6102c104039733f2abe464c77e05c77a17a6e29f431a2",
   "files": {
     "heldout_coding_sheet.csv": {
       "sha256": "de9b0318d6164edd0c37a5caaff8bd2577f83e93e43d358bdb0793a40b79f55d",
@@ -37,8 +39,8 @@
       "bytes": 3121
     },
     "CODEBOOK.md": {
-      "sha256": "2b18c3ad56822b7e7f41c1ea3e4f3f1d077c16cad45c70250b8d1ac62c9f014d",
-      "bytes": 4734
+      "sha256": "91bc467ee4adc8f4d19c5e3cb2a5fdc919dc0d7173595dcdf023b9fb7886e081",
+      "bytes": 6001
     },
     "src/06_codebook.py": {
       "sha256": "f7a069e5ca6bb37bd1a597d4adfbe91fb6ae8e96c503f2ce3c2e48c73e7a0afa",
@@ -47,6 +49,10 @@
     "src/07_apply.py": {
       "sha256": "d609cd0126fe5b2ff1bc400e035ee618e3d8fde75bd394ad20dc32a38d5b2425",
       "bytes": 3545
+    },
+    "src/08_coding_sheet.py": {
+      "sha256": "6a2214e5f5f242c9d30c6dc843e83a7d535d20dabf9398787f6207e1872295c6",
+      "bytes": 4986
     }
   }
 }
