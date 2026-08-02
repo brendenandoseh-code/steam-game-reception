@@ -1,0 +1,10 @@
+# Raw API pulls are cached locally and never committed.
+# Everything here is reproducible by running src/ in order. See README.md.
+data/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Large intermediate frames
+*.parquet
+*.pkl

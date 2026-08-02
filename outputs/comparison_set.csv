@@ -1,0 +1,20 @@
+appid,name,expected_name,axis,name_matches,genres,release_date,is_free,price_cents,price_usd,metacritic
+294100,RimWorld,RimWorld,colony,True,Indie|Simulation|Strategy,"Oct 17, 2018",False,3499,34.99,87
+975370,Dwarf Fortress,Dwarf Fortress,colony,True,Indie|Simulation|Strategy,"Dec 6, 2022",False,2999,29.99,93
+457140,Oxygen Not Included,Oxygen Not Included,colony,True,Indie|Simulation,"Jul 30, 2019",False,2499,24.99,85
+427520,Factorio,Factorio,colony,True,Casual|Indie|Simulation|Strategy,"Aug 14, 2020",False,3500,35.0,90
+1162750,Songs of Syx,Songs of Syx,colony,True,Casual|Indie|Simulation|Strategy|Early Access,"Sep 21, 2020",False,2499,24.99,
+242920,Banished,Banished,colony,True,Indie|Simulation|Strategy,"Feb 18, 2014",False,1999,19.99,73
+1029780,Going Medieval,Going Medieval,colony,True,Indie|RPG|Simulation|Strategy,"Mar 17, 2026",False,2999,29.99,76
+1158310,Crusader Kings III,Crusader Kings III,grand,True,RPG|Simulation|Strategy,"Sep 1, 2020",False,4999,49.99,91
+236850,Europa Universalis IV,Europa Universalis IV,grand,True,Simulation|Strategy,"Aug 13, 2013",False,4999,49.99,87
+529340,Victoria 3,Victoria 3,grand,True,Simulation|Strategy,"Oct 25, 2022",False,4999,49.99,
+333640,Caves of Qud,Caves of Qud,emergent,True,Adventure|Indie|RPG|Strategy,"Dec 5, 2024",False,2999,29.99,91
+233860,Kenshi,Kenshi,emergent,True,Action|Indie|RPG|Simulation|Strategy,"Dec 6, 2018",False,2999,29.99,75
+763890,Wildermyth,Wildermyth,emergent,True,Indie|RPG|Strategy,"Jun 15, 2021",False,2499,24.99,86
+986130,Shadows of Doubt,Shadows of Doubt,emergent,True,Action|Adventure|Indie|RPG,"Sep 26, 2024",False,999,9.99,
+1222670,The Sims™ 4,The Sims 4,life,True,Adventure|Casual|Simulation|Free To Play,"Jun 18, 2020",True,,,
+413150,Stardew Valley,Stardew Valley,life,True,Indie|RPG|Simulation,"Feb 26, 2016",False,1499,14.99,89
+666140,My Time at Portia,My Time At Portia,life,True,Adventure|Casual|Indie|RPG|Simulation,"Jan 15, 2019",False,2999,29.99,73
+599140,Graveyard Keeper,Graveyard Keeper,life,True,Adventure|Indie|RPG|Simulation,"Aug 15, 2018",False,1999,19.99,69
+972660,Spiritfarer®: Farewell Edition,Spiritfarer,life,True,Adventure|Indie|Simulation,"Aug 18, 2020",False,2999,29.99,84

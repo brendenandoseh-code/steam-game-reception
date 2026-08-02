@@ -1,0 +1,59 @@
+{
+  "frozen_at_utc": "2026-08-02T15:27:28+00:00",
+  "n_reviews": 22796,
+  "n_games": 19,
+  "review_timestamp_range_utc": [
+    "2023-12-13",
+    "2026-08-02"
+  ],
+  "api": {
+    "reviews_endpoint": "https://store.steampowered.com/appreviews/{appid}",
+    "reviews_params": {
+      "json": 1,
+      "filter": "recent",
+      "language": "english",
+      "purchase_type": "all",
+      "num_per_page": 100
+    },
+    "pages_per_game": 12,
+    "metadata_endpoint": "https://store.steampowered.com/api/appdetails",
+    "metadata_params": {
+      "cc": "us",
+      "l": "english"
+    },
+    "offtopic_activity": "Steam default retained (review-bomb periods excluded). Measured impact: Victoria 3 +396 reviews (+1.4%), positive rate -0.18pp; The Sims 4 unchanged."
+  },
+  "known_limitations": [
+    "Equal-N latest-review sample per game, NOT a shared calendar window: coverage runs 13 days (Stardew Valley) to 963 days (My Time at Portia), median 192.",
+    "Reviews are clustered within games; a segment holds 3-7 games, so the effective N for any segment-level claim is the game count. Pooled review-level inference is invalid.",
+    "English-language reviews only.",
+    "Comparison set is purposively selected, not a random sample of the category.",
+    "Steam offers no random-sample ordering; every available ordering is biased in a known way."
+  ],
+  "files": {
+    "reviews_raw.csv": {
+      "sha256": "04353c1ac4cfa786b60e2edf735e4207e6a28f83c436a01ecb5f07f5c8f3c83d",
+      "bytes": 8423349
+    },
+    "comparison_set.csv": {
+      "sha256": "0876813de16a8d3cd0a1e44b17ae5468ccaf92c576b23b0a74a01e7017b221b1",
+      "bytes": 2211
+    },
+    "denominators.csv": {
+      "sha256": "a582e1b5dfd4335007b150fdfddfa778ffe99e0293a96b27ef3e7f6c0c4ac6bb",
+      "bytes": 2185
+    },
+    "excluded_reviews.csv": {
+      "sha256": "acec094295e750b3dfad7254e3a0b43c8eff144d97a35d312e82c72fc81cc20c",
+      "bytes": 16804
+    },
+    "sampling_bias.csv": {
+      "sha256": "1ac44c7e511125b0c854399b2c1eba150cf50f70a182012c22cb6977c24aa31b",
+      "bytes": 652
+    },
+    "temporal_coverage.csv": {
+      "sha256": "fb1118059ebea37b19fc80876ea3f08ea25f88584cedc17f0b171e0f07e50d3d",
+      "bytes": 916
+    }
+  }
+}
