@@ -23,7 +23,7 @@ life sims (5). Purposively selected to span the positioning axes a new entrant m
 not an unweighted one, and its cursor pagination stalls near 200 reviews. A first pull using it
 silently truncated most games — Wildermyth returned 92 of 13,082 available English reviews.
 `filter=recent` pages reliably. Anyone pulling Steam reviews without checking this gets a
-truncated, negatively-skewed sample and no error message.
+truncated sample and no error message. At equal N the helpfulness view is more negative in 10 of 16 games, by a median of 1.1 points.
 
 **"Most recent 1,200 reviews" is not a time window.** Coverage runs from 13 days (Stardew Valley)
 to 963 days (My Time at Portia), median 192, because review volume differs by two orders of
@@ -33,9 +33,10 @@ magnitude across the set. This is an equal-N latest-review sample and is describ
 sub-genre claim is the game count, not the review count. Pooled two-proportion tests over 4,798
 clustered reviews would be badly overconfident and are not run.
 
-**Steam excludes off-topic review-bomb periods by default.** Retained, and its size measured rather
-than inherited silently: Victoria 3 gains 396 reviews (+1.4%) and shifts −0.18pp when they are
-included; The Sims 4 is unchanged.
+**Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is computed
+per game rather than inherited silently (9 of 19 games affected; largest is Factorio at
++3,355 reviews). Rate impact is small throughout, at most 0.23pp. See
+`outputs/offtopic_sensitivity.csv`.
 
 ## Reproduce it
 
@@ -43,7 +44,8 @@ included; The Sims 4 is unchanged.
 py src/01_resolve_comparison_set.py   # verify appids against the store API by name
 py src/02_pull_reviews.py             # pull reviews + population denominators
 py src/03_validate.py                 # acceptance gate; exits non-zero on failure
-py src/04_freeze.py                   # write the hash manifest
+py src/04_freeze.py create            # write the hash manifest
+py src/04_freeze.py verify            # check current files against it
 ```
 
 Every API response is cached to `data/cache/`, so a re-run makes no network calls and must
@@ -58,8 +60,9 @@ thinning a segment below three games each produce a non-zero exit.
 - **The comparison set is purposive**, not a random sample. Findings characterise this set.
 - **Steam offers no random ordering.** Every available ordering is biased in a known way; the
   choice is which known bias to take and to state.
-- **Sampled positive rates sit below lifetime rates for 15 of 19 games.** That is partly real
-  sentiment drift and partly an artifact of unequal time coverage. Do not read it as one effect.
+- **Sampled positive rates sit below lifetime rates for 17 of 19 games as point estimates**, and for
+  15 of 19 the Wilson interval excludes the lifetime rate. That is partly real sentiment drift and
+  partly an artifact of unequal time coverage. Do not read it as one effect.
 - **Price is excluded from segmentation.** The API returns the price at pull time, which reflects
   whatever sale is running.
 

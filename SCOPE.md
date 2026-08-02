@@ -57,7 +57,7 @@ Fixed up front so the project finishes in days rather than becoming open-ended.
 **In:**
 - **The simulation category comparison set: 19 titles, resolved and name-verified** (`outputs/comparison_set.csv`). Colony/management 7, grand-strategy/dynasty 3, emergent-narrative 4, life sim 5. Chosen to span the positioning axes a new entrant must pick between. **Purposive, not random**, so it characterises this set and does not estimate a category population.
 - English-language reviews only
-- Up to 1,200 reviews per game via `filter=recent`. All 19 games reached the cap; 22,796 reviews total.
+- Up to 1,200 reviews per game via `filter=recent`. 17 of 19 games returned exactly 1,200 unique reviews; two returned 1,198 after de-duplication. 22,796 total.
 - One outcome variable: `voted_up`
 - Segmentation: **sub-genre** (the positioning axis) and **playtime band**. Price tier is dropped: the API's `final` price reflects whatever sale is running at pull time, so it is not a stable attribute.
 
@@ -76,7 +76,7 @@ Three consequences to state on the slide, not bury:
 
 - **It is an equal-N latest-review sample, not a time window.** Coverage runs from 13 days (Stardew Valley) to 963 days (My Time at Portia), median 192. Never describe it as "current sentiment" across the category.
 - **Helpfulness ordering differs from recency ordering** by a median of 1.1 points and a mean of 3.8 across 16 games, more negative in 10 of 16. Report both statistics; the mean is outlier-driven. This is a description of two orderings, not a demonstrated causal effect of sorting.
-- **Steam excludes off-topic review-bomb periods by default.** That default is retained and its size measured: Victoria 3 +396 reviews (+1.4%) and -0.18pp when included, The Sims 4 unchanged.
+- **Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is *computed* per game into `outputs/offtopic_sensitivity.csv`, not asserted. 9 of 19 games are affected; the largest is Factorio at +3,355 reviews. Rate impact is small throughout, at most 0.23pp.
 
 **2. Codebook, hand-validated.** Not a black box:
 
@@ -118,11 +118,11 @@ Per `ANALYST_OPERATING_SYSTEM.md`, before any interpretation:
 
 - [ ] Schema and types validated on both endpoints
 - [ ] Duplicate `recommendationid` values removed
-- [ ] Missingness quantified for playtime and price
+- [ ] Missingness quantified for playtime and review text (price is excluded from the analysis)
 - [ ] Sampled positive rate reconciled against `query_summary` totals per game
 - [ ] Unit of analysis labeled on every chart
-- [ ] Segment cell sizes reported; any cell too small to test is shown as such rather than silently dropped
-- [ ] Coding agreement rate computed on a held-out sample and stated in the deck
+- [ ] Games per sub-genre reported as the effective N; no pooled review-level test is run
+- [ ] Per-category precision, recall and F1 computed on the held-out sample and stated in the deck
 - [ ] Every number in the deck traceable to a script, no hand-typed figures
 
 ## Timeline

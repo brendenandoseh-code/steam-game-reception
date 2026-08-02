@@ -1,5 +1,5 @@
 {
-  "frozen_at_utc": "2026-08-02T15:27:28+00:00",
+  "frozen_at_utc": "2026-08-02T16:01:29+00:00",
   "n_reviews": 22796,
   "n_games": 19,
   "review_timestamp_range_utc": [
@@ -21,14 +21,14 @@
       "cc": "us",
       "l": "english"
     },
-    "offtopic_activity": "Steam default retained (review-bomb periods excluded). Measured impact: Victoria 3 +396 reviews (+1.4%), positive rate -0.18pp; The Sims 4 unchanged."
+    "offtopic_activity": "Steam default retained (review-bomb periods withheld). Per-game sensitivity is computed, not asserted: see outputs/offtopic_sensitivity.csv."
   },
   "known_limitations": [
-    "Equal-N latest-review sample per game, NOT a shared calendar window: coverage runs 13 days (Stardew Valley) to 963 days (My Time at Portia), median 192.",
-    "Reviews are clustered within games; a segment holds 3-7 games, so the effective N for any segment-level claim is the game count. Pooled review-level inference is invalid.",
+    "Equal-N latest-review sample per game, NOT a shared calendar window. See outputs/temporal_coverage.csv for per-game spans.",
+    "Reviews are clustered within games; a sub-genre holds 3-7 games, so the effective N for any sub-genre claim is the game count. Pooled review-level inference is invalid.",
     "English-language reviews only.",
     "Comparison set is purposively selected, not a random sample of the category.",
-    "Steam offers no random-sample ordering; every available ordering is biased in a known way."
+    "Steam offers no random-sample ordering; every available ordering is biased in a known way. See outputs/sampling_bias.csv."
   ],
   "files": {
     "reviews_raw.csv": {
@@ -47,13 +47,21 @@
       "sha256": "acec094295e750b3dfad7254e3a0b43c8eff144d97a35d312e82c72fc81cc20c",
       "bytes": 16804
     },
+    "offtopic_sensitivity.csv": {
+      "sha256": "988e899d97fdfc84cb172a7e8bcb5cba72edcedbcc9d383dd0179432f3392c99",
+      "bytes": 1051
+    },
+    "rejected_appids.csv": {
+      "sha256": "c4775cec4daac1ab8f4c7067335891e044a3cd3908d9725438cf4fd91e1287d7",
+      "bytes": 138
+    },
     "sampling_bias.csv": {
       "sha256": "1ac44c7e511125b0c854399b2c1eba150cf50f70a182012c22cb6977c24aa31b",
       "bytes": 652
     },
     "temporal_coverage.csv": {
-      "sha256": "fb1118059ebea37b19fc80876ea3f08ea25f88584cedc17f0b171e0f07e50d3d",
-      "bytes": 916
+      "sha256": "c98a9612171ccf44837ed87952d3ec251c7d19c50d58f2806313a4933b8121b8",
+      "bytes": 924
     }
   }
 }

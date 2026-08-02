@@ -1,10 +1,14 @@
-"""Step 4 - write the freeze manifest.
+"""Step 4 - freeze manifest. Two explicit modes, never both.
 
-"Frozen" is meaningless without a hash record. This writes a committed manifest
-so any later run can prove it is working on the same bytes: file hashes, row
-counts, retrieval window, API parameters, and per-game date coverage.
+    py src/04_freeze.py create    write the manifest from current files
+    py src/04_freeze.py verify    check current files against it, exit non-zero on drift
 
-Re-running this after a cache-only rerun must reproduce identical hashes.
+The previous version only ever wrote. That made the manifest a record nobody
+checked, which is how three corrupted outputs were committed with a clean git
+status: the manifest had detected the drift the whole time and was never asked.
+
+All dates are UTC. date.fromtimestamp() uses the machine timezone and makes the
+manifest hash depend on where it was generated.
 """
 
 import csv
@@ -18,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from steam import ROOT  # noqa: E402
 
 DATA, OUT = ROOT / "data", ROOT / "outputs"
+MANIFEST = OUT / "freeze_manifest.json"
 
 
 def sha(path: Path) -> str:
@@ -28,15 +33,16 @@ def sha(path: Path) -> str:
     return h.hexdigest()
 
 
-def main():
-    raw = DATA / "reviews_raw.csv"
-    rows = list(csv.DictReader(open(raw, encoding="utf-8")))
+def tracked():
+    """Every file the freeze covers. Anything in outputs/ except the manifest."""
+    files = [DATA / "reviews_raw.csv"]
+    files += sorted(p for p in OUT.glob("*.csv"))
+    return files
+
+
+def create():
+    rows = list(csv.DictReader(open(DATA / "reviews_raw.csv", encoding="utf-8")))
     ts = [int(r["timestamp_created"]) for r in rows]
-
-    files = {}
-    for p in [raw] + sorted(OUT.glob("*.csv")):
-        files[p.name] = {"sha256": sha(p), "bytes": p.stat().st_size}
-
     manifest = {
         "frozen_at_utc": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "n_reviews": len(rows),
@@ -52,30 +58,66 @@ def main():
             "pages_per_game": 12,
             "metadata_endpoint": "https://store.steampowered.com/api/appdetails",
             "metadata_params": {"cc": "us", "l": "english"},
-            "offtopic_activity": "Steam default retained (review-bomb periods excluded). "
-                                 "Measured impact: Victoria 3 +396 reviews (+1.4%), "
-                                 "positive rate -0.18pp; The Sims 4 unchanged.",
+            "offtopic_activity": "Steam default retained (review-bomb periods withheld). "
+                                 "Per-game sensitivity is computed, not asserted: see "
+                                 "outputs/offtopic_sensitivity.csv.",
         },
         "known_limitations": [
-            "Equal-N latest-review sample per game, NOT a shared calendar window: "
-            "coverage runs 13 days (Stardew Valley) to 963 days (My Time at Portia), median 192.",
-            "Reviews are clustered within games; a segment holds 3-7 games, so the effective N "
-            "for any segment-level claim is the game count. Pooled review-level inference is invalid.",
+            "Equal-N latest-review sample per game, NOT a shared calendar window. See "
+            "outputs/temporal_coverage.csv for per-game spans.",
+            "Reviews are clustered within games; a sub-genre holds 3-7 games, so the effective N "
+            "for any sub-genre claim is the game count. Pooled review-level inference is invalid.",
             "English-language reviews only.",
             "Comparison set is purposively selected, not a random sample of the category.",
-            "Steam offers no random-sample ordering; every available ordering is biased in a known way.",
+            "Steam offers no random-sample ordering; every available ordering is biased in a "
+            "known way. See outputs/sampling_bias.csv.",
         ],
-        "files": files,
+        "files": {p.name: {"sha256": sha(p), "bytes": p.stat().st_size} for p in tracked()},
     }
-
-    path = OUT / "freeze_manifest.json"
-    path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
-    print(f"wrote {path.relative_to(ROOT)}")
-    print(f"  reviews : {manifest['n_reviews']:,} across {manifest['n_games']} games")
-    print(f"  window  : {manifest['review_timestamp_range_utc'][0]} to {manifest['review_timestamp_range_utc'][1]}")
-    for n, m in files.items():
+    MANIFEST.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    print(f"created {MANIFEST.relative_to(ROOT)}")
+    print(f"  {manifest['n_reviews']:,} reviews / {manifest['n_games']} games / "
+          f"{manifest['review_timestamp_range_utc'][0]} to {manifest['review_timestamp_range_utc'][1]}")
+    for n, m in manifest["files"].items():
         print(f"  {m['sha256'][:16]}  {m['bytes']:>10,}  {n}")
+    return 0
+
+
+def verify():
+    if not MANIFEST.exists():
+        print("no manifest to verify against")
+        return 1
+    m = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    on_disk = {p.name: p for p in tracked()}
+    problems = []
+
+    for name, meta in m["files"].items():
+        p = on_disk.pop(name, None)
+        if p is None:
+            problems.append(f"MISSING {name}")
+            print(f"  MISSING  {name}")
+            continue
+        h = sha(p)
+        ok = h == meta["sha256"]
+        if not ok:
+            problems.append(f"CHANGED {name}")
+        print(f"  {'match  ' if ok else 'CHANGED'}  {name}")
+    for extra in on_disk:
+        problems.append(f"UNTRACKED {extra}")
+        print(f"  UNTRACKED {extra}  (present on disk, absent from manifest)")
+
+    if problems:
+        print(f"\nVERIFY FAILED ({len(problems)}): {problems}")
+        return 1
+    print(f"\nVERIFY OK - {len(m['files'])} files match the manifest")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    mode = sys.argv[1] if len(sys.argv) > 1 else ""
+    if mode == "create":
+        raise SystemExit(create())
+    if mode == "verify":
+        raise SystemExit(verify())
+    print(__doc__)
+    raise SystemExit(2)

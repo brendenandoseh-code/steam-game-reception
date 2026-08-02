@@ -6,15 +6,17 @@ they are NOT interchangeable - this was measured, not assumed (2026-08-02):
 
   filter=recent - strict recency. Pages reliably through the corpus.
   filter=all    - helpfulness-weighted. Pagination stalls after roughly 200
-                  reviews, and the reviews it surfaces skew more negative,
-                  because negative reviews accumulate more helpful votes.
+                  reviews. At equal N it is more negative than the recency view
+                  in 10 of 16 games (median 1.1pp). Why is not established here,
+                  so no mechanism is claimed.
 
 An earlier version of this script used filter=all for bulk sampling. That was
 wrong on both counts: it silently truncated most games (Wildermyth returned 92
 of 13,082 available English reviews) and it biased the sample negative.
 
-The main sample therefore uses filter=recent, which makes it a RECENCY-WEIGHTED
-sample of English reviews rather than a random one. A smaller filter=all pull is
+The main sample therefore uses filter=recent. That makes it an EQUAL-N
+LATEST-REVIEW sample per game, not a shared time window: coverage spans 13 days
+to 963 days across the set (outputs/temporal_coverage.csv). A smaller filter=all pull is
 kept alongside it so the size of the helpfulness bias can be reported rather
 than hand-waved.
 
