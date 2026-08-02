@@ -1,0 +1,16 @@
+{
+  "phase": "day3_spotcheck_selection",
+  "purpose": "inter-coder reliability subset; second coder labels these blind to the analyst",
+  "seed": 3007,
+  "n": 30,
+  "selected_before_either_coder_started": true,
+  "reference_standard": "the analyst, who codes all 150",
+  "second_coder": "AI assistant, this subset only, labels committed before the analyst submits",
+  "depends_on_sheet_sha": "de9b0318d6164edd0c37a5caaff8bd2577f83e93e43d358bdb0793a40b79f55d",
+  "files": {
+    "spotcheck_rows.csv": {
+      "sha256": "5148bc7e10470af41032d10b978f7f9cfb0472ab9eb85de992cc9945056dd2a6",
+      "bytes": 451
+    }
+  }
+}
