@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "data" / "cache"
 CACHE.mkdir(parents=True, exist_ok=True)
 
-UA = "Mozilla/5.0 (portfolio research project; contact andoseh10@gmail.com)"
+UA = "Mozilla/5.0 (personal research project; github.com/brendenandoseh-code)"
 MIN_INTERVAL = 1.6  # seconds between live calls
 _last_call = [0.0]
 

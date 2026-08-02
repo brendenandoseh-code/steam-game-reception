@@ -1,7 +1,9 @@
 # Scope
 
-**Status:** data collection complete and frozen (`outputs/freeze_manifest.json`). Codebook v1 drafted
-and applied. The blinded held-out sheet is built and awaiting hand-coding; no validated metrics exist yet.
+**Status:** in progress. Data collection complete and frozen (`outputs/freeze_manifest.json`). Codebook v1
+drafted and applied. The blinded held-out sheet is built and awaiting hand-coding, so **no validated
+metrics exist yet and no conclusions are published**. The repository is public from this point so the
+method can be checked before the results exist, not after.
 
 ## Why this project exists
 
