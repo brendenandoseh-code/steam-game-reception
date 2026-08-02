@@ -76,14 +76,13 @@ Three consequences to state on the slide, not bury:
 
 - **It is an equal-N latest-review sample, not a time window.** Coverage runs from 13 days (Stardew Valley) to 963 days (My Time at Portia), median 192. Never describe it as "current sentiment" across the category.
 - **Helpfulness ordering differs from recency ordering** by a median of 1.1 points and a mean of 3.8 across 16 games, more negative in 10 of 16. Report both statistics; the mean is outlier-driven. This is a description of two orderings, not a demonstrated causal effect of sorting.
-- **Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is *computed* per game into `outputs/offtopic_sensitivity.csv`, not asserted. 9 of 19 games are affected; the largest is Factorio at +3,355 reviews. Rate impact is small throughout, at most 0.23pp.
+- **Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is computed per game into `outputs/offtopic_sensitivity.csv`, not asserted. **Four** games show unambiguous withholding (Factorio +3,355, Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five more differ by only 1-3 reviews, which cannot be separated from ordinary review accrual because the default and included requests were captured 22-59 minutes apart; those are not counted as affected. Largest absolute rate impact across the set is 0.225pp.
 
 **2. Codebook, hand-validated.** Not a black box:
 
 1. Read a random 100 negative reviews and draft objection categories (performance and bugs, price and value, difficulty and balance, content volume, monetization, story and writing, controls and UI, etc.)
 2. Turn each category into explicit keyword and phrase rules
 3. Apply the rules across the full sample
-4. Hand-code a **fresh** random 150 reviews independently and report **per-category precision, recall and F1**, not a single agreement rate. Categories are multi-label, and one pooled agreement number is trivially inflated by the common categories
 
 Step 4 is the point. Per-category precision and recall are what separate defensible coding from asserted categories.
 
@@ -106,7 +105,6 @@ A 10 to 12 slide PowerPoint deck, which is the artifact this project exists to p
 9. Where they do not, stated plainly
 10. So what: what a publisher should do differently
 11. Limitations
-12. Method appendix, including the coding agreement rate
 
 Charts generated in Python for reproducibility; deck assembled in PowerPoint so it actually looks like a client deliverable. A programmatically generated deck reads as generic, and visual craft is being assessed here.
 

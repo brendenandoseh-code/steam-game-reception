@@ -1,5 +1,5 @@
 {
-  "frozen_at_utc": "2026-08-02T16:01:29+00:00",
+  "frozen_at_utc": "2026-08-02T16:12:06+00:00",
   "n_reviews": 22796,
   "n_games": 19,
   "review_timestamp_range_utc": [
@@ -48,8 +48,8 @@
       "bytes": 16804
     },
     "offtopic_sensitivity.csv": {
-      "sha256": "988e899d97fdfc84cb172a7e8bcb5cba72edcedbcc9d383dd0179432f3392c99",
-      "bytes": 1051
+      "sha256": "ce8e2b696d304f1ebf63685de4ca7b7341b959119bc374dfe60fe05c915d5991",
+      "bytes": 1434
     },
     "rejected_appids.csv": {
       "sha256": "c4775cec4daac1ab8f4c7067335891e044a3cd3908d9725438cf4fd91e1287d7",

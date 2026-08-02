@@ -1,20 +1,20 @@
-name,default_total,included_total,delta_reviews,default_pos_rate,included_pos_rate,delta_pos_rate_pp
-RimWorld,141565,141568,3,0.9794,0.9794,0.0
-Dwarf Fortress,25830,25830,0,0.9484,0.9484,0.0
-Oxygen Not Included,52183,52184,1,0.9585,0.9585,-0.0018
-Factorio,145069,148424,3355,0.9825,0.9815,-0.0973
-Songs of Syx,6545,6545,0,0.9435,0.9435,0.0
-Banished,29307,29308,1,0.903,0.903,0.0003
-Going Medieval,10201,10201,0,0.8869,0.8869,0.0
-Crusader Kings III,68186,69380,1194,0.8996,0.8973,-0.225
-Europa Universalis IV,68956,69580,624,0.8734,0.8727,-0.0718
-Victoria 3,28139,28535,396,0.6828,0.681,-0.1766
-Caves of Qud,11288,11288,0,0.9515,0.9515,0.0
-Kenshi,56125,56127,2,0.9509,0.9509,0.0002
-Wildermyth,13082,13082,0,0.949,0.949,0.0
-Shadows of Doubt,12683,12683,0,0.8086,0.8086,0.0
-The Sims™ 4,105758,105758,0,0.8687,0.8687,0.0
-Stardew Valley,463184,463185,1,0.9885,0.9885,0.0
-My Time at Portia,15842,15842,0,0.9156,0.9156,0.0
-Graveyard Keeper,24242,24242,0,0.8263,0.8263,0.0
-Spiritfarer®: Farewell Edition,21697,21697,0,0.9496,0.9496,0.0
+name,default_total,included_total,delta_reviews,interpretation,default_pos_rate,included_pos_rate,delta_pos_rate_pp
+RimWorld,141565,141568,3,within capture-timing noise,0.9794,0.9794,0.0
+Dwarf Fortress,25830,25830,0,no difference,0.9484,0.9484,0.0
+Oxygen Not Included,52183,52184,1,within capture-timing noise,0.9585,0.9585,-0.0018
+Factorio,145069,148424,3355,off-topic withholding,0.9825,0.9815,-0.0973
+Songs of Syx,6545,6545,0,no difference,0.9435,0.9435,0.0
+Banished,29307,29308,1,within capture-timing noise,0.903,0.903,0.0003
+Going Medieval,10201,10201,0,no difference,0.8869,0.8869,0.0
+Crusader Kings III,68186,69380,1194,off-topic withholding,0.8996,0.8973,-0.225
+Europa Universalis IV,68956,69580,624,off-topic withholding,0.8734,0.8727,-0.0718
+Victoria 3,28139,28535,396,off-topic withholding,0.6828,0.681,-0.1766
+Caves of Qud,11288,11288,0,no difference,0.9515,0.9515,0.0
+Kenshi,56125,56127,2,within capture-timing noise,0.9509,0.9509,0.0002
+Wildermyth,13082,13082,0,no difference,0.949,0.949,0.0
+Shadows of Doubt,12683,12683,0,no difference,0.8086,0.8086,0.0
+The Sims™ 4,105758,105758,0,no difference,0.8687,0.8687,0.0
+Stardew Valley,463184,463185,1,within capture-timing noise,0.9885,0.9885,0.0
+My Time at Portia,15842,15842,0,no difference,0.9156,0.9156,0.0
+Graveyard Keeper,24242,24242,0,no difference,0.8263,0.8263,0.0
+Spiritfarer®: Farewell Edition,21697,21697,0,no difference,0.9496,0.9496,0.0

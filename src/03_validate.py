@@ -33,8 +33,13 @@ DATA, OUT = ROOT / "data", ROOT / "outputs"
 
 # Frozen BEFORE any codebook sampling so it cannot be tuned to taste.
 MIN_REVIEW_CHARS = 3
+# Below this, a default-vs-included difference cannot be told apart from
+# reviews accruing between the two requests (captured 22-59 min apart).
+AMBIGUITY_FLOOR = 100
 MAX_MISSING_PCT = 5.0
 MIN_GAMES_PER_SEGMENT = 3
+# Parsed as ints downstream, so any blank is a crash rather than a clean failure.
+ZERO_TOLERANCE = ["timestamp_created", "playtime_at_review_min", "playtime_forever_min"]
 REQUIRED = ["appid", "name", "axis", "recommendationid", "voted_up", "review",
             "playtime_at_review_min", "playtime_forever_min", "timestamp_created"]
 
@@ -76,13 +81,23 @@ def main():
     if dupes:
         fails.append(f"{dupes} duplicate recommendationids")
 
-    print(f"3. MISSINGNESS  (gate: any required field over {MAX_MISSING_PCT}% fails)")
+    print(f"3. MISSINGNESS  (gate: {MAX_MISSING_PCT}% tolerance, except ZERO_TOLERANCE fields)")
     for f in ["review", "playtime_at_review_min", "playtime_forever_min", "timestamp_created"]:
         miss = sum(1 for r in rows if not r[f] or r[f] == "None")
         pct = 100 * miss / len(rows)
-        print(f"   {f:<26} {miss:>6,}  ({pct:>5.2f}%)")
-        if pct > MAX_MISSING_PCT:
+        zero = f in ZERO_TOLERANCE
+        print(f"   {f:<26} {miss:>6,}  ({pct:>5.2f}%){'   [zero-tolerance]' if zero else ''}")
+        if zero and miss:
+            # These are parsed as ints downstream. One blank produces a traceback
+            # rather than a clean failure, so they cannot carry any tolerance.
+            fails.append(f"{f} missing on {miss} rows (zero-tolerance field)")
+        elif not zero and pct > MAX_MISSING_PCT:
             fails.append(f"{f} missing on {pct:.2f}% of rows")
+
+    non_numeric = [f for f in ZERO_TOLERANCE
+                   if any(not str(r[f]).lstrip("-").isdigit() for r in rows)]
+    if non_numeric:
+        fails.append(f"non-numeric values in {non_numeric}")
 
     if fails:
         # Bail before any step that assumes clean types, so a data defect
@@ -92,6 +107,10 @@ def main():
         return 1
 
     print("4. RECONCILIATION vs denominators.csv (per game)")
+    raw_ids = {r["appid"] for r in rows}
+    den_ids = {d["appid"] for d in denoms}
+    if raw_ids != den_ids:
+        fails.append(f"appid sets differ: raw-only={sorted(raw_ids-den_ids)} denom-only={sorted(den_ids-raw_ids)}")
     by_game = defaultdict(list)
     for r in rows:
         by_game[r["appid"]].append(r)
@@ -164,14 +183,23 @@ def main():
         (dt_, dp), (it, ip) = got["default"], got["included"]
         if not dt_ or not it:
             continue
+        delta = it - dt_
         ot.append({"name": d["name"], "default_total": dt_, "included_total": it,
-                   "delta_reviews": it - dt_,
+                   "delta_reviews": delta,
+                   # The two calls are minutes to an hour apart, so a handful of
+                   # reviews is indistinguishable from ordinary accrual.
+                   "interpretation": "off-topic withholding" if delta >= AMBIGUITY_FLOOR
+                                     else ("within capture-timing noise" if delta > 0 else "no difference"),
                    "default_pos_rate": round(dp / dt_, 4), "included_pos_rate": round(ip / it, 4),
                    "delta_pos_rate_pp": round((ip / it - dp / dt_) * 100, 4)})
     if ot:
-        affected = [o for o in ot if o["delta_reviews"]]
-        print(f"   games with off-topic reviews withheld: {len(affected)}/{len(ot)}   "
-              f"max delta {max((o['delta_reviews'] for o in ot), default=0):+,} reviews")
+        clear = [o for o in ot if o["delta_reviews"] >= AMBIGUITY_FLOOR]
+        noise = [o for o in ot if 0 < o["delta_reviews"] < AMBIGUITY_FLOOR]
+        print(f"   unambiguous withholding (>={AMBIGUITY_FLOOR} reviews): {len(clear)}/{len(ot)}   "
+              f"largest {max((o['delta_reviews'] for o in ot), default=0):+,}")
+        print(f"   within capture-timing noise (1-{AMBIGUITY_FLOOR-1}): {len(noise)}/{len(ot)}  "
+              f"- NOT counted as affected")
+        print(f"   max absolute rate impact: {max(abs(o['delta_pos_rate_pp']) for o in ot):.3f}pp")
         pending["offtopic_sensitivity.csv"] = ot
 
     print(f"9. CLUSTERING  (effective N for a sub-genre claim is GAMES, not reviews)")

@@ -34,9 +34,10 @@ sub-genre claim is the game count, not the review count. Pooled two-proportion t
 clustered reviews would be badly overconfident and are not run.
 
 **Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is computed
-per game rather than inherited silently (9 of 19 games affected; largest is Factorio at
-+3,355 reviews). Rate impact is small throughout, at most 0.23pp. See
-`outputs/offtopic_sensitivity.csv`.
+per game rather than inherited silently. Four games show unambiguous withholding (Factorio +3,355,
+Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five others differ by only
+1-3 reviews, which cannot be told apart from ordinary accrual: the two requests were captured 22-59
+minutes apart. Largest absolute rate impact is 0.225pp. See `outputs/offtopic_sensitivity.csv`.
 
 ## Reproduce it
 
@@ -61,8 +62,9 @@ thinning a segment below three games each produce a non-zero exit.
 - **Steam offers no random ordering.** Every available ordering is biased in a known way; the
   choice is which known bias to take and to state.
 - **Sampled positive rates sit below lifetime rates for 17 of 19 games as point estimates**, and for
-  15 of 19 the Wilson interval excludes the lifetime rate. That is partly real sentiment drift and
-  partly an artifact of unequal time coverage. Do not read it as one effect.
+  15 of 19 the Wilson interval excludes the lifetime rate. This is **compatible with** sentiment
+  changing over time, but the design cannot separate that from unequal time coverage and non-random
+  ordering. Do not report it as drift.
 - **Price is excluded from segmentation.** The API returns the price at pull time, which reflects
   whatever sale is running.
 

@@ -1,4 +1,4 @@
-"""Step 4 - freeze manifest. Two explicit modes, never both.
+"""Step 4 - Day 1 freeze manifest. Two explicit modes, never both.
 
     py src/04_freeze.py create    write the manifest from current files
     py src/04_freeze.py verify    check current files against it, exit non-zero on drift
@@ -33,11 +33,24 @@ def sha(path: Path) -> str:
     return h.hexdigest()
 
 
+# EXPLICIT, not a glob. A glob over outputs/ meant the first Day 2 artifact
+# (discovery_ids.csv) would register as UNTRACKED and invalidate the Day 1
+# freeze. A phase manifest must cover exactly the phase's own outputs.
+DAY1_FILES = [
+    "reviews_raw.csv",          # in data/
+    "comparison_set.csv",
+    "denominators.csv",
+    "excluded_reviews.csv",
+    "offtopic_sensitivity.csv",
+    "rejected_appids.csv",
+    "sampling_bias.csv",
+    "temporal_coverage.csv",
+]
+
+
 def tracked():
-    """Every file the freeze covers. Anything in outputs/ except the manifest."""
-    files = [DATA / "reviews_raw.csv"]
-    files += sorted(p for p in OUT.glob("*.csv"))
-    return files
+    """Exactly the Day 1 outputs. Later phases get their own manifests."""
+    return [(DATA if n == "reviews_raw.csv" else OUT) / n for n in DAY1_FILES]
 
 
 def create():
@@ -102,9 +115,9 @@ def verify():
         if not ok:
             problems.append(f"CHANGED {name}")
         print(f"  {'match  ' if ok else 'CHANGED'}  {name}")
-    for extra in on_disk:
+    for extra in on_disk:  # cannot occur with an explicit list, kept as a guard
         problems.append(f"UNTRACKED {extra}")
-        print(f"  UNTRACKED {extra}  (present on disk, absent from manifest)")
+        print(f"  UNTRACKED {extra}")
 
     if problems:
         print(f"\nVERIFY FAILED ({len(problems)}): {problems}")
