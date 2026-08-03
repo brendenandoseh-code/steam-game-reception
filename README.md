@@ -4,7 +4,7 @@ A study of **22,796 public Steam reviews across 19 simulation titles**, asking w
 reviews actually complain about and whether those complaints differ by sub-genre. Two days of work,
 15 commits, everything reproducible from cache.
 
-**Deck:** [`Steam_Game_Reception_Validation_Deck.pptx`](Steam_Game_Reception_Validation_Deck.pptx) (13 slides)
+**Deck:** [`Steam_Game_Reception_Validation_Deck.pptx`](Steam_Game_Reception_Validation_Deck.pptx) (13 slides, [PDF](Steam_Game_Reception_Validation_Deck.pdf))
 · **Full validation report:** [VALIDATION_V1.md](VALIDATION_V1.md) · **Design:** [SCOPE.md](SCOPE.md)
 
 ---
