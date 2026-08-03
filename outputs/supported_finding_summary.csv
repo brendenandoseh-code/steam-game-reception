@@ -1,0 +1,4 @@
+category,validation_f1,median_colony,median_emergent,median_grand,median_life,highest_sub_genre,lowest_sub_genre,ratio_high_to_low,separates,top_two_games
+Bugs and crashes,0.706,0.1622,0.1988,0.195,0.1586,Emergent narrative,Life sim,1.25,no,Shadows of Doubt 0.465; Victoria 3 0.366
+Grind and pacing,0.667,0.1154,0.1682,0.0881,0.2681,Life sim,Grand strategy,3.04,yes,Spiritfarer®: Farewell Edition 0.465; Graveyard Keeper 0.452
+Interface and controls,0.562,0.1081,0.1588,0.1096,0.0621,Emergent narrative,Life sim,2.56,yes,Dwarf Fortress 0.352; Caves of Qud 0.297

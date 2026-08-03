@@ -1,128 +1,201 @@
-# Steam game reception — what players in negative reviews actually object to
+# What players object to in simulation games, and what it takes to measure it
 
-**Status:** Data collection and codebook v1 are frozen, and v1 has now been validated against my
-hand-coding of the held-out 150. **The instrument failed.** Rules and hand-coding agree on the exact
-label set in 30 of 150 reviews (20%); micro precision is 0.516 and micro recall 0.496; 9 of 16
-categories have usable support and their median F1 is 0.562. Full result and failure analysis in
-[VALIDATION_V1.md](VALIDATION_V1.md); a 12-slide walkthrough of the sampling traps and the failed
-instrument is in `Steam_Game_Reception_Validation_Deck.pptx`. No player insight is published, and the
-per-game rates in `outputs/category_rates.csv` remain unvalidated rule output.
+A study of **22,796 public Steam reviews across 19 simulation titles**, asking what players in negative
+reviews actually complain about and whether those complaints differ by sub-genre. Two days of work,
+15 commits, everything reproducible from cache.
 
-A messaging and positioning study built on public Steam review text. A review score tells a
-publisher *that* players are unhappy; it does not say *why*. This takes the negative reviews
-across an established simulation-game comparison set and asks what players are objecting to,
-how that differs by sub-genre, and what it implies for a new entrant's positioning risks.
+**Deck:** [`Steam_Game_Reception_Validation_Deck.pptx`](Steam_Game_Reception_Validation_Deck.pptx) (12 slides)
+· **Full validation report:** [VALIDATION_V1.md](VALIDATION_V1.md) · **Design:** [SCOPE.md](SCOPE.md)
 
-## Data
+---
 
-**19 games, 22,796 English reviews.** Two public Steam endpoints, no API key, no scraping:
+## The finding
 
-- `store.steampowered.com/appreviews/{appid}` — review text, recommend flag, playtime at review, timestamp
-- `store.steampowered.com/api/appdetails` — name, genres, release date, price, Metacritic
+Using only the three objection categories that passed validation, **the complaint you inherit depends
+on which shelf you position on.**
 
-Comparison set: colony/management sims (7), grand strategy and dynasty (3), emergent narrative (4),
-life sims (5). Purposively selected to span the positioning axes a new entrant must choose between.
+![Supported finding](visuals/05_supported_finding.png)
 
-## What Day 1 found before any analysis
+| Objection | Colony | Emergent | Grand strategy | Life sim | Varies? |
+|---|---|---|---|---|---|
+| Bugs and crashes | 16.2% | 19.9% | 19.5% | 15.9% | **No** (1.2x) |
+| Grind and pacing | 11.5% | 16.8% | 8.8% | **26.8%** | **Yes** (3.0x) |
+| Interface and controls | 10.8% | **15.9%** | 11.0% | 6.2% | **Yes** (2.6x) |
 
-**The obvious way to pull this data is wrong.** `filter=all` is Steam's helpfulness-weighted view,
-not an unweighted one, and its cursor pagination stalls near 200 reviews. A first pull using it
-silently truncated most games — Wildermyth returned 92 of 13,082 available English reviews.
-`filter=recent` pages reliably. Anyone pulling Steam reviews without checking this gets a
-truncated sample and no error message. At equal N the helpfulness view is more negative in 10 of 16 games, by a median of 1.1 points.
+*Median share of each game's negative reviews. Unit is the game, not the review.*
 
-**"Most recent 1,200 reviews" is not a time window.** Coverage runs from 13 days (Stardew Valley)
-to 963 days (My Time at Portia), median 192, because review volume differs by two orders of
-magnitude across the set. This is an equal-N latest-review sample and is described that way.
+**Bugs are the price of entry, not a positioning variable.** Roughly one negative review in six blames
+defects, and that holds across all four sub-genres. Nobody wins by being less broken than the category;
+they only lose by being more.
 
-**Reviews are clustered inside games.** A sub-genre holds 3 to 7 games, so the effective N for any
-sub-genre claim is the game count, not the review count. Pooled two-proportion tests over 4,798
-clustered reviews would be badly overconfident and are not run.
+**Grind is the life-sim tax.** Three times the rate of grand strategy, and the two worst titles in the
+whole set are both life sims (Spiritfarer 46.5%, Graveyard Keeper 45.2%). Position toward cozy and you
+inherit an audience that will punish pacing.
 
-**Steam withholds off-topic review-bomb periods by default.** Retained, and the sensitivity is computed
-per game rather than inherited silently. Four games show unambiguous withholding (Factorio +3,355,
-Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five others differ by only
-1-3 reviews, which cannot be told apart from ordinary accrual: the two requests were captured 22-59
-minutes apart. Largest absolute rate impact is 0.225pp. See `outputs/offtopic_sensitivity.csv`.
+**Legibility is the emergent-narrative tax.** Interface complaints run highest where systems are
+deepest, led by Dwarf Fortress at 35.2% and Caves of Qud at 29.7%. Depth and opacity arrive together
+unless someone works to separate them.
 
-**A candidate signal that did not survive.** Rule matches for `procgen_hollow` concentrate in
-emergent-narrative games (3 of 4 at 7.0-18.8%; 14 of the other 15 games at or near zero). That was
-recorded as a concentration of *keyword matches*, not evidence about what reviewers meant, and held
-back pending hand-coding. Hand-coding has now been done and the category scored precision 0.250 and
-recall 0.111 on the held-out 150. Roughly three in four of the matches producing that concentration
-are not the objection the category names, so it cannot be read as evidence about procedural
-generation. The study's central question stays open. See [VALIDATION_V1.md](VALIDATION_V1.md).
+For a new entrant: budget for defects regardless, and pick which of the other two problems you would
+rather own, because the shelf you choose largely chooses for you.
 
-**"Uncoded" is coverage, not recall.** 20.2% of negative reviews match no rule, against 12% on the
-discovery sample the rules were built from. That gap measures where the rules are silent. It is not a
-recall estimate: a coded review can still contain an objection the rules missed, and an uncoded review
-may legitimately have no objection to code.
+---
 
-## Honest notes (data caveats)
+## Four things that will break your Steam review analysis
 
-- **English only.** Coding cannot be validated in languages I do not read.
-- **The comparison set is purposive**, not a random sample. Findings characterise this set.
-- **Steam offers no random ordering.** Every available ordering is biased in a known way; the
-  choice is which known bias to take and to state.
-- **Sampled positive rates sit below lifetime rates for 17 of 19 games as point estimates**, and for
-  15 of 19 the Wilson interval excludes the lifetime rate. This is **compatible with** sentiment
-  changing over time, but the design cannot separate that from unequal time coverage and non-random
-  ordering. Do not report it as drift.
-- **Price is excluded from segmentation.** The API returns the price at pull time, which reflects
-  whatever sale is running.
+These hold independently of any coding scheme, and cost a re-pull to learn.
 
-## How I used AI
+**1. `filter=all` is a trap with three parts.** It is the helpfulness-ranked view rather than
+everything, its paging stalls near 200 reviews, and it runs measurably more negative. A first pull
+using it returned **92 of 13,082** available reviews for one game, with no error. Use `filter=recent`.
 
-This project is AI-assisted throughout, and the codebook in particular is **an AI-drafted candidate**,
-not an analyst-authored instrument. An AI assistant read the 100-review discovery sample, proposed the
-16 objection categories, wrote the regex rules that operationalise them, ran them across all 3,004
-negative reviews, and drafted the aggregate summary. It also wrote the pull, validation and freeze code.
+**2. "The most recent 1,200 reviews" is not a time window.** It spans 13 days for *Stardew Valley* and
+963 for *My Time at Portia*, median 192, because review volume differs across these games by nearly
+thirty times. Never call such a sample "current sentiment".
 
-What stays with me: the question, the scope, the verification, and every interpretation that ships.
-The held-out 150 are coded by me against the blinded sheet, in `outputs/analyst_labels.csv`, and that
-coding is the single reference standard this repository holds. It is what
-[VALIDATION_V1.md](VALIDATION_V1.md) measures v1 against.
+**3. Reviews are clustered inside games.** A sub-genre here holds 3 to 7 titles, so the game count is
+the effective sample size, not the review count. Pooled review-level tests would be badly overconfident
+and are not run anywhere in this repository.
 
-A second AI (Codex) independently read 30 of the 150, selected by `src/10_spotcheck_select.py` before
-coding began. Its exact label sets agree with mine on 15 of 30 (50%), pooled Jaccard 0.588
-(`src/16_spotcheck_agreement.py`, `outputs/spotcheck_agreement.csv`). That is not human validation and
-does not replace the analyst standard, but it is the only independent second reading here, and
-[VALIDATION_V1.md](VALIDATION_V1.md) uses it to estimate how much agreement was achievable on this task.
+**4. Steam withholds review-bomb periods by default.** Four games clearly affected, the largest
+*Factorio* at 3,355 reviews. Kept the default and measured it rather than inheriting it silently
+([`outputs/offtopic_sensitivity.csv`](outputs/offtopic_sensitivity.csv)).
 
-An earlier AI reading pass over the same 150 was removed from the repository rather than kept. It was
-built as scaffolding so the metrics and manifest chain could be exercised before my coding existed, and
-once my coding landed the two files were label-identical, so keeping both offered no second opinion and
-invited the two from being read as sources corroborating each other.
+![Temporal coverage](visuals/01_temporal_coverage.png)
 
-No precision or accuracy figure is reported anywhere in this repository without saying who produced the
-labels behind it. The per-game rates in `outputs/category_rates.csv` remain **unvalidated rule output**:
-they show where a keyword rule fired, and v1 validation establishes that this is a poor proxy for what
-reviewers meant.
+---
+
+## What did not work, and why that is reported here
+
+I wrote 16 objection categories, froze them, then hand-coded 150 held-back reviews myself and scored
+the frozen rules against my own labels. **Most of the categories failed.**
+
+Rules and hand-coding produced the same label set on 30 of 150 reviews (20%). Pooled, the rules were
+right about half the time they fired and caught about half of what was there. Nine of 16 categories had
+enough support to score at all, with a median F1 of 0.562.
+
+| Category | Precision | Recall | F1 |
+|---|---|---|---|
+| Bugs and crashes | 0.80 | 0.63 | **0.71** |
+| Grind and pacing | 0.67 | 0.67 | 0.67 |
+| Unexplained systems | 0.60 | 0.75 | 0.67 |
+| Interface and controls | 0.56 | 0.56 | 0.56 |
+| Unfinished or abandoned | 0.53 | 0.53 | 0.53 |
+| Publisher behaviour | 0.40 | 0.71 | 0.51 |
+| Shallow or repetitive | 0.86 | **0.27** | 0.41 |
+| **Hollow generated content** | **0.25** | **0.11** | **0.15** |
+| Unfair randomness | **0.00** | n/a | n/a |
+
+Full table with counts: [`outputs/validation_metrics.csv`](outputs/validation_metrics.csv). Failure
+analysis attributed to individual patterns: [VALIDATION_V1.md](VALIDATION_V1.md).
+
+**The pattern is the result.** Rules work where the language is literal and fail where it requires
+judgement. Bugs scored 0.71 because people write "it crashed". Hollow generated content scored 0.15
+because nobody writes "the generation is visible"; they write something that means it.
+
+This is a known limitation in content analysis rather than a novel discovery: interpretive constructs
+generally need trained coders and iterative category refinement, and reliability below roughly 0.67 on
+standard measures is normally treated as a signal to revise the scheme rather than to scale it. What
+this project adds is a measurement of exactly how far keyword rules get you on this material, in this
+domain, against a human standard.
+
+**One independent check.** A second reader (Codex) coded 30 of the 150 on rows selected before either
+of us began. Exact agreement was 15 of 30, 50%. That reader is an AI, not a second analyst, so it is
+not human validation and does not establish a ceiling. It is suggestive that these categories carry
+real ambiguity, and it is the reason the next step is category refinement rather than better patterns.
+
+**What I nearly reported instead.** Early on, rule matches for hollow generated content concentrated
+neatly in emergent-narrative games, three of four between 7% and 19% against near-zero elsewhere. It
+looked like the finding. It is not evidence of anything, because the rule producing those matches is
+wrong three times in four. A clean pattern made of unreliable measurements is still unreliable.
+
+---
+
+## Method
+
+19 titles spanning four positioning axes: colony and management (7), grand strategy and dynasty (3),
+emergent narrative (4), life sim (5). Purposively chosen, not random, so results describe this set and
+do not estimate a category population. English reviews only, up to 1,200 per game via `filter=recent`.
+
+Discovery and held-out samples were drawn, hashed and **committed before any review text was read**.
+The codebook was **frozen** before it was applied. The held-out sheet was **blinded**: no game name, no
+sub-genre, no machine predictions, shuffled order. Two weaknesses were **written down before validation
+ran**, so they were predictions rather than excuses.
+
+Those four choices are why a negative result exists at all. Without them the rules would have been
+edited and a finding reported.
+
+Full design and limitations in [SCOPE.md](SCOPE.md); categories, coding rules and authorship in
+[CODEBOOK.md](CODEBOOK.md).
 
 ## Reproduce it
 
 ```bash
 py src/01_resolve_comparison_set.py   # verify appids against the store API by name
-py src/02_pull_reviews.py             # pull reviews + population denominators
+py src/02_pull_reviews.py             # reviews + population denominators
 py src/03_validate.py                 # acceptance gate; exits non-zero on failure
-py src/04_freeze.py create            # write the day-1 hash manifest
-py src/05_split.py                    # discovery/held-out IDs, before reading text
-py src/06_codebook.py                 # frozen rules (imported, not run directly)
-py src/07_apply.py                    # apply rules to all negatives
+py src/04_freeze.py create            # hash manifest
+py src/05_split.py                    # discovery/held-out IDs, before reading any text
+py src/07_apply.py                    # apply the frozen rules
 py src/08_coding_sheet.py             # blinded held-out sheet
-py src/09_figures.py                  # descriptive charts (not validation-dependent)
-py src/10_spotcheck_select.py         # pick the 30-row inter-coder spot-check, before coding
-py src/13_spotcheck_sheet.py          # blank spot-check sheet for the second reader
-py src/14_analyst_labels.py           # ingest my hand-coding, with gates
-py src/12_metrics.py                  # per-category precision/recall/F1 vs my labels
-py src/15_error_analysis.py           # per-pattern attribution of v1's failures
-py src/16_spotcheck_agreement.py      # second reader vs my labels on the 30 rows
-py src/verify.py                      # check ALL FOUR phase manifests
-py src/test_gate.py                   # gate invariants
+py src/14_analyst_labels.py           # ingest hand-coded labels
+py src/12_metrics.py                  # per-category scores
+py src/17_supported_finding.py        # the finding, using validated categories only
+py src/09_figures.py                  # figures
+py src/verify.py                      # manifests + lineage
 ```
 
-Every API response is cached to `data/cache/`, so a re-run makes no network calls and must
-reproduce identical hashes. Raw pulls are gitignored; only derived aggregates are committed.
+Every API response is cached, so a re-run makes no network calls and reproduces identical hashes. Raw
+pulls are gitignored; the hand-coded labels are committed because they are primary data that cannot be
+regenerated. `py src/test_gate.py` runs 16 checks confirming the validation gate fails on broken input
+without touching any output file.
 
-The gate is tested to fail, not just to pass: injecting a duplicate ID, blanking timestamps, or
-thinning a segment below three games each produce a non-zero exit.
+## Honest notes (data caveats)
+
+- **The finding rests on three categories out of sixteen.** The other thirteen either failed validation
+  or had too little support to score.
+- **Rates understate.** Recall is 0.63, 0.67 and 0.56 for the three categories used, so every level
+  above is lower than the truth. Comparing games is only fair if the rules miss at a similar rate
+  everywhere, which is plausible but unverified.
+- **English only.** I cannot validate coding in languages I do not read.
+- **The comparison set is purposive**, not random. Findings characterise these 19 games.
+- **Steam offers no random ordering.** Every available ordering is biased in a known way; the choice is
+  which known bias to take and state.
+- **The sample runs harsher than each game's lifetime record in 17 of 19 games.** Compatible with
+  sentiment changing over time, but this design cannot separate that from unequal time coverage and
+  non-random ordering. Do not report it as drift.
+- **31 of 150 negative reviews carried an objection no category covered.** The scheme is incomplete as
+  well as imprecise.
+
+## How I used AI
+
+This project is AI-assisted throughout, and the codebook in particular is **an AI-drafted candidate**,
+not an analyst-authored instrument. An AI assistant read the 100-review discovery sample, proposed the
+16 objection categories, wrote the rules that operationalise them, ran them across all 3,004 negative
+reviews, and wrote the collection and scoring code.
+
+What stays with me: the question, the scope, the verification, and every interpretation that ships.
+The held-out 150 are coded by me against the blinded sheet, in `outputs/analyst_labels.csv`, and that
+coding is the single reference standard this repository holds.
+
+A second AI (Codex) independently read 30 of the 150, on rows selected by `src/10_spotcheck_select.py`
+before coding began. Its exact label sets agree with mine on 15 of 30 (50%). That is not human
+validation and does not replace the analyst standard, but it is the only independent second reading
+here.
+
+No precision or accuracy figure appears anywhere in this repository without saying who produced the
+labels behind it. The most useful thing AI produced here was five confident, error-free wrong answers:
+a pull that silently truncated most games, a validation gate that reported success on unusable data,
+that same gate destroying good outputs while correctly failing, a hash manifest nothing ever verified,
+and a coding sheet truncated mid-review. None raised an error. Every one was caught by reconciling
+against an independent source, never by rereading the code.
+
+## What comes next
+
+The measurement problem blocks the interesting questions. A study of how complaints shift across a
+game's life, or of what players praise, both need an instrument that works on interpretive categories.
+
+So the next question is whether a language model clears the bar keyword rules could not, measured
+against this same held-out set. This project produced what that test needs: 150 reviews with human
+reference labels, a frozen baseline with published scores, a scoring script that already accepts an
+alternate label file, and an independent second reading for context.

@@ -103,9 +103,47 @@ def fig_clustering():
     fig.tight_layout(); fig.savefig(FIG / "04_clustering.png", dpi=200); plt.close(fig)
 
 
+def fig_supported_finding():
+    """The one finding validation supports: which objection you inherit depends
+    on which shelf you position on. Only the three categories that cleared
+    validation are shown."""
+    d = rows("supported_finding_by_game.csv")
+    cats = [("bugs_crashes", "Bugs and crashes", "does not vary by shelf"),
+            ("tedium_grind", "Grind and pacing", "3.0x, worst in life sims"),
+            ("ui_controls", "Interface and controls", "2.6x, worst in emergent narrative")]
+    order = ["colony", "emergent", "grand", "life"]
+    labels = {"colony": "colony /\nmanagement", "emergent": "emergent\nnarrative",
+              "grand": "grand\nstrategy", "life": "life sim"}
+    fig, axs = plt.subplots(1, 3, figsize=(10.5, 4.2), sharey=True)
+    for ax, (key, title, note) in zip(axs, cats):
+        for i, a in enumerate(order):
+            vals = sorted(float(r[key]) * 100 for r in d if r["sub_genre"] == a)
+            ax.scatter([i] * len(vals), vals, s=44, color=ACCENT, zorder=3, alpha=.85)
+            n = len(vals)
+            med = vals[n // 2] if n % 2 else (vals[n // 2 - 1] + vals[n // 2]) / 2
+            ax.plot([i - .26, i + .26], [med, med], color=WARN, lw=2.2, zorder=4)
+        ax.set_xticks(range(len(order)))
+        ax.set_xticklabels([labels[a] for a in order], fontsize=7.5)
+        ax.set_xlim(-.5, len(order) - .5)
+        ax.set_title(title, fontsize=9.5, color=INK, loc="left", pad=14)
+        ax.text(0, 1.008, note, transform=ax.transAxes, fontsize=7.5, color=MUTED, va="bottom")
+    axs[0].set_ylabel("% of that game's negative reviews")
+    axs[0].set_ylim(0, None)
+    fig.suptitle("The objection you inherit depends on which shelf you sit on",
+                 x=.012, y=.985, ha="left", fontsize=12, fontweight="bold", color=INK)
+    fig.text(.012, .93,
+             "unit: game (each dot is one title, orange bar is the sub-genre median). Only the three "
+             "categories that\ncleared validation are shown. Rates understate: the rules miss real cases.",
+             fontsize=8.5, color=MUTED, va="top")
+    fig.tight_layout(rect=(0, 0, 1, .86))
+    fig.savefig(FIG / "05_supported_finding.png", dpi=200); plt.close(fig)
+
+
 if __name__ == "__main__":
+    fig_supported_finding()
+    fig_supported_finding()
     fig_coverage(); fig_sampling_bias(); fig_reconciliation(); fig_clustering()
     for p in sorted(FIG.glob("*.png")):
         print(f"  {p.name}  {p.stat().st_size//1024} KB")
     print(f"\n{len(list(FIG.glob('*.png')))} figures -> visuals/")
-    print("No objection-rate chart: those rest on an unvalidated codebook.")
+    print("Objection rates shown ONLY for the three categories that cleared validation.")
