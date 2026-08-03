@@ -103,7 +103,7 @@ def fig_clustering():
     fig.tight_layout(); fig.savefig(FIG / "04_clustering.png", dpi=200); plt.close(fig)
 
 
-def fig_supported_finding():
+def fig_supported_finding(titled=True):
     """The one finding validation supports: which objection you inherit depends
     on which shelf you position on. Only the three categories that cleared
     validation are shown."""
@@ -129,19 +129,25 @@ def fig_supported_finding():
         ax.text(0, 1.008, note, transform=ax.transAxes, fontsize=7.5, color=MUTED, va="bottom")
     axs[0].set_ylabel("% of that game's negative reviews")
     axs[0].set_ylim(0, None)
-    fig.suptitle("The objection you inherit depends on which shelf you sit on",
-                 x=.012, y=.985, ha="left", fontsize=12, fontweight="bold", color=INK)
-    fig.text(.012, .93,
-             "unit: game (each dot is one title, orange bar is the sub-genre median). Only the three "
-             "categories that\ncleared validation are shown. Rates understate: the rules miss real cases.",
-             fontsize=8.5, color=MUTED, va="top")
-    fig.tight_layout(rect=(0, 0, 1, .86))
-    fig.savefig(FIG / "05_supported_finding.png", dpi=200); plt.close(fig)
+    if titled:
+        fig.suptitle("The objection you inherit depends on which shelf you sit on",
+                     x=.012, y=.985, ha="left", fontsize=12, fontweight="bold", color=INK)
+        fig.text(.012, .93,
+                 "unit: game (each dot is one title, orange bar is the sub-genre median). Only the three "
+                 "categories that\ncleared validation are shown. Rates understate: the rules miss real cases.",
+                 fontsize=8.5, color=MUTED, va="top")
+        fig.tight_layout(rect=(0, 0, 1, .86))
+        name = "05_supported_finding.png"
+    else:
+        # Deck variant: the slide supplies the title, so an embedded one competes with it.
+        fig.tight_layout()
+        name = "05b_supported_finding_bare.png"
+    fig.savefig(FIG / name, dpi=200); plt.close(fig)
 
 
 if __name__ == "__main__":
-    fig_supported_finding()
-    fig_supported_finding()
+    fig_supported_finding(titled=True)    # README / standalone
+    fig_supported_finding(titled=False)   # deck, where the slide supplies the title
     fig_coverage(); fig_sampling_bias(); fig_reconciliation(); fig_clustering()
     for p in sorted(FIG.glob("*.png")):
         print(f"  {p.name}  {p.stat().st_size//1024} KB")
