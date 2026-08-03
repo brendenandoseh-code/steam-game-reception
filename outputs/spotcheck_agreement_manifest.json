@@ -1,0 +1,21 @@
+{
+  "phase": "day3_spotcheck_agreement",
+  "first_reader": "the analyst (outputs/analyst_labels.csv)",
+  "second_reader": "Codex AI reading pass on the 30 pre-selected rows",
+  "NOT_human_validation": true,
+  "purpose": "estimate the achievable agreement ceiling on this coding task, as context for the rules-versus-analyst figures in VALIDATION_V1.md",
+  "limits": "30 rows; the second reader is an AI, not a second analyst",
+  "n_rows": 30,
+  "exact_label_set_agreement_n": 15,
+  "exact_label_set_agreement_rate": 0.5,
+  "pooled_positive_jaccard_micro": 0.588,
+  "mean_row_jaccard_macro": 0.706,
+  "depends_on_analyst_sha": "9b8c91d3555d617b77c3a5d75436f57e753480c5610d1a3df9ca721c1394fbf1",
+  "depends_on_selection_sha": "5148bc7e10470af41032d10b978f7f9cfb0472ab9eb85de992cc9945056dd2a6",
+  "files": {
+    "spotcheck_agreement.csv": {
+      "sha256": "ef1ad2b4fdd91073df19dd1140488d9839917b0b3e7ca96af101ffdb74bde92d",
+      "bytes": 625
+    }
+  }
+}

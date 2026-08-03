@@ -1,7 +1,12 @@
 # Steam game reception — what players in negative reviews actually object to
 
-**Status:** Day 1 complete and frozen. Codebook v1 drafted and applied. The blinded held-out sheet is
-built and awaiting analyst hand-coding; no validated metrics exist yet, and the deck is not started.
+**Status:** Data collection and codebook v1 are frozen, and v1 has now been validated against my
+hand-coding of the held-out 150. **The instrument failed.** Rules and hand-coding agree on the exact
+label set in 30 of 150 reviews (20%); micro precision is 0.516 and micro recall 0.496; 9 of 16
+categories have usable support and their median F1 is 0.562. Full result and failure analysis in
+[VALIDATION_V1.md](VALIDATION_V1.md); a 12-slide walkthrough of the sampling traps and the failed
+instrument is in `Steam_Game_Reception_Validation_Deck.pptx`. No player insight is published, and the
+per-game rates in `outputs/category_rates.csv` remain unvalidated rule output.
 
 A messaging and positioning study built on public Steam review text. A review score tells a
 publisher *that* players are unhappy; it does not say *why*. This takes the negative reviews
@@ -40,13 +45,13 @@ Crusader Kings III +1,194, Europa Universalis IV +624, Victoria 3 +396). Five ot
 1-3 reviews, which cannot be told apart from ordinary accrual: the two requests were captured 22-59
 minutes apart. Largest absolute rate impact is 0.225pp. See `outputs/offtopic_sensitivity.csv`.
 
-**A candidate signal, not a finding.** Rule matches for `procgen_hollow` concentrate in
-emergent-narrative games (3 of 4 at 7.0-18.8%; 14 of the other 15 games at or near zero). That is a
-concentration of *keyword matches*, and it is not yet evidence about what reviewers meant. Two reasons
-to withhold judgement: 8 of the 76 matches fire only on generic phrases with no reference to
-generation, and 21 of the 76 also carry `shallow_repetitive`, which itself appears in all four
-emergent games at 6.9-23.0%. Any claim that these are distinct objections has to survive hand-coding
-first.
+**A candidate signal that did not survive.** Rule matches for `procgen_hollow` concentrate in
+emergent-narrative games (3 of 4 at 7.0-18.8%; 14 of the other 15 games at or near zero). That was
+recorded as a concentration of *keyword matches*, not evidence about what reviewers meant, and held
+back pending hand-coding. Hand-coding has now been done and the category scored precision 0.250 and
+recall 0.111 on the held-out 150. Roughly three in four of the matches producing that concentration
+are not the objection the category names, so it cannot be read as evidence about procedural
+generation. The study's central question stays open. See [VALIDATION_V1.md](VALIDATION_V1.md).
 
 **"Uncoded" is coverage, not recall.** 20.2% of negative reviews match no rule, against 12% on the
 discovery sample the rules were built from. That gap measures where the rules are silent. It is not a
@@ -74,14 +79,25 @@ not an analyst-authored instrument. An AI assistant read the 100-review discover
 negative reviews, and drafted the aggregate summary. It also wrote the pull, validation and freeze code.
 
 What stays with me: the question, the scope, the verification, and every interpretation that ships.
-The held-out 150 are labelled by me, blind to the machine predictions and to which game each review
-came from. Software has necessarily processed their text; what has not happened is any analyst reading
-or labelling of them, precisely because the assistant cannot be both the instrument and the reference standard
-for its own accuracy.
+The held-out 150 are coded by me against the blinded sheet, in `outputs/analyst_labels.csv`, and that
+coding is the single reference standard this repository holds. It is what
+[VALIDATION_V1.md](VALIDATION_V1.md) measures v1 against.
+
+A second AI (Codex) independently read 30 of the 150, selected by `src/10_spotcheck_select.py` before
+coding began. Its exact label sets agree with mine on 15 of 30 (50%), pooled Jaccard 0.588
+(`src/16_spotcheck_agreement.py`, `outputs/spotcheck_agreement.csv`). That is not human validation and
+does not replace the analyst standard, but it is the only independent second reading here, and
+[VALIDATION_V1.md](VALIDATION_V1.md) uses it to estimate how much agreement was achievable on this task.
+
+An earlier AI reading pass over the same 150 was removed from the repository rather than kept. It was
+built as scaffolding so the metrics and manifest chain could be exercised before my coding existed, and
+once my coding landed the two files were label-identical, so keeping both offered no second opinion and
+invited the two from being read as sources corroborating each other.
 
 No precision or accuracy figure is reported anywhere in this repository without saying who produced the
-reference labels. Until the hand-coding is done, the per-game rates in `outputs/category_rates.csv` are
-**unvalidated rule output**: they show where a keyword rule fired, not what reviewers meant.
+labels behind it. The per-game rates in `outputs/category_rates.csv` remain **unvalidated rule output**:
+they show where a keyword rule fired, and v1 validation establishes that this is a poor proxy for what
+reviewers meant.
 
 ## Reproduce it
 
@@ -94,7 +110,14 @@ py src/05_split.py                    # discovery/held-out IDs, before reading t
 py src/06_codebook.py                 # frozen rules (imported, not run directly)
 py src/07_apply.py                    # apply rules to all negatives
 py src/08_coding_sheet.py             # blinded held-out sheet
-py src/verify.py                      # check ALL THREE phase manifests
+py src/09_figures.py                  # descriptive charts (not validation-dependent)
+py src/10_spotcheck_select.py         # pick the 30-row inter-coder spot-check, before coding
+py src/13_spotcheck_sheet.py          # blank spot-check sheet for the second reader
+py src/14_analyst_labels.py           # ingest my hand-coding, with gates
+py src/12_metrics.py                  # per-category precision/recall/F1 vs my labels
+py src/15_error_analysis.py           # per-pattern attribution of v1's failures
+py src/16_spotcheck_agreement.py      # second reader vs my labels on the 30 rows
+py src/verify.py                      # check ALL FOUR phase manifests
 py src/test_gate.py                   # gate invariants
 ```
 

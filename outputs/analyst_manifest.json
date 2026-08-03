@@ -1,0 +1,22 @@
+{
+  "phase": "day3_analyst_labels",
+  "labeller": "the analyst, hand-coded against CODEBOOK.md on the blinded sheet",
+  "attestation": "Brenden states these are his own labels. A Codex-generated copy of the same sheet was submitted first as a deliberate test of whether AI review would detect the substitution; it did.",
+  "empty_rows": [
+    "6",
+    "63",
+    "76",
+    "97",
+    "137",
+    "146"
+  ],
+  "empty_rows_meaning": "objection has no category in codebook v1; a coverage finding, not a coding gap",
+  "depends_on_sheet_sha": "de9b0318d6164edd0c37a5caaff8bd2577f83e93e43d358bdb0793a40b79f55d",
+  "depends_on_input_sha": "13b4a21821fbac431b61aea51defe96ab3f104e025c817f0dff8022c80ae9c9b",
+  "files": {
+    "analyst_labels.csv": {
+      "sha256": "9b8c91d3555d617b77c3a5d75436f57e753480c5610d1a3df9ca721c1394fbf1",
+      "bytes": 7526
+    }
+  }
+}

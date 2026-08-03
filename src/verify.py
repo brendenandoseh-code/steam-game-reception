@@ -14,7 +14,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from steam import ROOT  # noqa: E402
 
 DATA, OUT = ROOT / "data", ROOT / "outputs"
-MANIFESTS = ["freeze_manifest.json", "split_manifest.json", "codebook_manifest.json"]
+MANIFESTS = ["freeze_manifest.json", "split_manifest.json", "codebook_manifest.json",
+             "analyst_manifest.json"]
 
 
 def sha(p: Path) -> str:

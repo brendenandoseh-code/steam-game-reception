@@ -1,6 +1,8 @@
 # Raw API pulls are cached locally and never committed.
-# Everything here is reproducible by running src/ in order. See README.md.
-data/
+# Everything here is reproducible by running src/ in order, with one exception
+# below: the hand-coded labels are primary data and cannot be regenerated.
+data/*
+!data/analyst_coded_heldout.csv
 __pycache__/
 *.pyc
 .ipynb_checkpoints/

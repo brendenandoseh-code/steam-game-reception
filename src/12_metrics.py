@@ -4,10 +4,15 @@ Reports TP, FP, FN, support on both sides, precision, recall and F1 per category
 No single pooled agreement rate: the scheme is multi-label and the categories are
 unevenly frequent, so one number would be carried by the common ones.
 
-Read the header of 11_reference_labels.py before using any of these figures. The
-reference labels were produced by an AI assistant reading each review, not by the
-analyst. This measures rules-versus-reading, not accuracy against a human
-standard, and every category with thin support is marked inconclusive.
+Compares the frozen rules against the analyst's hand-coded labels. A different
+label file can be passed as an argument; whichever is used is printed on every
+run and written into the output, because which labels sit behind a precision
+figure changes what that figure means.
+
+  py src/12_metrics.py                              # outputs/analyst_labels.csv
+  py src/12_metrics.py path/to/other_labels.csv
+
+Every category with thin support on either side is marked inconclusive.
 """
 
 import csv
@@ -26,9 +31,22 @@ DATA, OUT = ROOT / "data", ROOT / "outputs"
 MIN_SUPPORT = 10   # below this on either side, the category is inconclusive
 
 
+SOURCE_NOTE = {
+    "analyst_labels.csv": "hand-coded by the analyst against the blinded sheet. "
+                          "See outputs/analyst_manifest.json.",
+}
+
+
 def main():
+    src = Path(sys.argv[1]) if len(sys.argv) > 1 else OUT / "analyst_labels.csv"
+    if not src.exists():
+        print(f"label file not found: {src}")
+        return 1
+    out_name = "validation_metrics.csv" if src.name == "analyst_labels.csv" \
+        else f"validation_metrics_{src.stem}.csv"
+
     ref = {r["recommendationid"]: r for r in
-           csv.DictReader(open(OUT / "reference_labels.csv", encoding="utf-8"))}
+           csv.DictReader(open(src, encoding="utf-8"))}
     raw = {r["recommendationid"]: r for r in
            csv.DictReader(open(DATA / "reviews_raw.csv", encoding="utf-8"))}
 
@@ -55,9 +73,12 @@ def main():
                     "f1": round(f1, 3) if f1 is not None else "",
                     "verdict": "usable" if conclusive else "INCONCLUSIVE (thin support)"})
 
-    with (OUT / "validation_metrics.csv").open("w", newline="", encoding="utf-8") as f:
+    for r in out:
+        r["label_source"] = src.name
+    with (OUT / out_name).open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(out[0].keys())); w.writeheader(); w.writerows(out)
 
+    print(f"labels: {src.name}   ({len(ref)} rows)\n")
     print(f"{'category':<24}{'mach':>5}{'ref':>5}{'TP':>4}{'FP':>4}{'FN':>4}"
           f"{'prec':>7}{'rec':>7}{'F1':>7}   verdict")
     for r in sorted(out, key=lambda r: -r["reference_support"]):
@@ -68,9 +89,10 @@ def main():
               f"{r['tp']:>4}{r['fp']:>4}{r['fn']:>4}{p:>7}{rc:>7}{f1:>7}   {r['verdict']}")
     usable = [r for r in out if r["verdict"] == "usable"]
     print(f"\n{len(usable)} of {len(out)} categories have support on both sides for a usable figure.")
-    print("Reference labels are AI-produced by a reading pass, not analyst-produced. "
-          "See outputs/reference_manifest.json.")
+    print(f"wrote {out_name}")
+    print(f"Label source: {src.name} - {SOURCE_NOTE.get(src.name, 'provenance not recorded')}")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
