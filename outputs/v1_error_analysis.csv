@@ -3,13 +3,13 @@ rng_unfair,\brandom(ness|ly)?\b,0,11,11,0.0
 update_regression,\bupdates?\b,6,7,13,0.462
 developer_conduct,\bparadox\b,3,6,9,0.333
 npc_ai_pathing,\bnpcs?\b,1,6,7,0.143
-developer_conduct,\bdeveloper,4,5,9,0.444
 developer_conduct,\bdevs?\b,2,5,7,0.286
+developer_conduct,\bdeveloper,4,5,9,0.444
 monetization_dlc,\bdlcs?\b,4,5,9,0.444
-npc_ai_pathing,\bstuck\b,0,4,4,0.0
 npc_ai_pathing,\bstupid\b,0,4,4,0.0
-bugs_crashes,\bbugs\b,8,3,11,0.727
+npc_ai_pathing,\bstuck\b,0,4,4,0.0
 bugs_crashes,\bbugg?(y|ed|s)\b,12,3,15,0.8
+bugs_crashes,\bbugs\b,8,3,11,0.727
 bugs_crashes,\bbroken\b,3,3,6,0.5
 opacity_teaching,\btutorial,8,3,11,0.727
 performance,\boptimi[sz],1,3,4,0.25
@@ -18,20 +18,20 @@ rng_unfair,\bluck\b,0,3,3,0.0
 tedium_grind,\brepetitive\b,3,3,6,0.5
 ui_controls,\bui\b,2,3,5,0.4
 monetization_dlc,\$\d,1,2,3,0.333
-npc_ai_pathing,\bai\b,2,2,4,0.5
 npc_ai_pathing,\bdwarves\b,0,2,2,0.0
+npc_ai_pathing,\bai\b,2,2,4,0.5
 opacity_teaching,\bwiki\b,1,2,3,0.333
 rng_unfair,\bdice\b,0,2,2,0.0
 shallow_repetitive,\bboring\b,9,2,11,0.818
 tedium_grind,\btedious\b,4,2,6,0.667
 tedium_grind,\bwaiting\b,1,2,3,0.333
 ui_controls,\bcontrols?\b,4,2,6,0.667
+unfinished_abandoned,\bearly access\b,4,2,6,0.667
 unfinished_abandoned,\bincomplete\b,0,2,2,0.0
 unfinished_abandoned,\bpotential\b,3,2,5,0.6
-unfinished_abandoned,\bearly access\b,4,2,6,0.667
 bugs_crashes,\bjank,0,1,1,0.0
-bugs_crashes,\bcrash(es|ed|ing)?\b,4,1,5,0.8
 bugs_crashes,\bgame ?breaking\b,1,1,2,0.5
+bugs_crashes,\bcrash(es|ed|ing)?\b,4,1,5,0.8
 developer_conduct,\bgreed(y)?\b,1,1,2,0.5
 developer_conduct,\bea\b,0,1,1,0.0
 difficulty_punishing,\bdifficulty\b,0,1,1,0.0
@@ -40,13 +40,13 @@ opacity_teaching,\bno idea what\b,1,1,2,0.5
 opacity_teaching,\bconfusing\b,0,1,1,0.0
 opacity_teaching,\bdon'?t understand\b,0,1,1,0.0
 opacity_teaching,\bexplain(s|ed|ing)?\b,1,1,2,0.5
-performance,\bframe rate\b,0,1,1,0.0
 performance,\bfps\b,0,1,1,0.0
+performance,\bframe rate\b,0,1,1,0.0
 rng_unfair,\brng\b,0,1,1,0.0
-tedium_grind,\bslog\b,2,1,3,0.667
 tedium_grind,\bchore\b,0,1,1,0.0
-ui_controls,\bcamera\b,0,1,1,0.0
+tedium_grind,\bslog\b,2,1,3,0.667
 ui_controls,\bclunky\b,0,1,1,0.0
+ui_controls,\bcamera\b,0,1,1,0.0
 ui_controls,\bunintuitive\b,0,1,1,0.0
 unfinished_abandoned,\babandon(ed|ing)?\b,0,1,1,0.0
 update_regression,\bpatch(es|ed)?\b,2,1,3,0.667
@@ -57,16 +57,16 @@ bugs_crashes,\bsoft ?lock,1,0,1,1.0
 bugs_crashes,\bunplayable\b,5,0,5,1.0
 developer_conduct,\bpublisher\b,1,0,1,1.0
 monetization_dlc,\bpaywall,1,0,1,1.0
-monetization_dlc,\bprice\b,1,0,1,1.0
 monetization_dlc,\boverpriced\b,1,0,1,1.0
+monetization_dlc,\bprice\b,1,0,1,1.0
 npc_ai_pathing,\bvillagers?\b,1,0,1,1.0
 opacity_teaching,\blearning curve\b,1,0,1,1.0
-performance,\bstutter,1,0,1,1.0
 performance,\blag(gy|s|ging)?\b,3,0,3,1.0
-shallow_repetitive,\bbland\b,1,0,1,1.0
-shallow_repetitive,\bspreadsheet\b,1,0,1,1.0
+performance,\bstutter,1,0,1,1.0
 shallow_repetitive,\blacks? (any )?(depth|flavou?r|content|soul)\b,2,0,2,1.0
+shallow_repetitive,\bspreadsheet\b,1,0,1,1.0
 shallow_repetitive,\bshallow\b,1,0,1,1.0
+shallow_repetitive,\bbland\b,1,0,1,1.0
 taste_mismatch,\bnot for me\b,1,0,1,1.0
 tedium_grind,\bgrind(y|ing)?\b,8,0,8,1.0
 ui_controls,\binterface\b,2,0,2,1.0
